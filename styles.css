@@ -193,6 +193,7 @@ h1 em { color: var(--coral); font-weight: inherit; }
 .project:nth-child(3) { animation-delay: .16s; }
 .project:nth-child(4) { animation-delay: .24s; }
 .project:nth-child(5) { animation-delay: .32s; }
+.project:nth-child(6) { animation-delay: .4s; }
 
 .project-featured { grid-column: span 7; }
 .project-featured + .project { grid-column: span 5; }
