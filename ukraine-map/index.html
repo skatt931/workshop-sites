@@ -3,10 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Інтерактивна особиста мапа регіонів України з локальним збереженням і можливістю поділитися позначками.">
-<meta name="theme-color" content="#E6E8E3">
 <title>Моя мапа України</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232F5FA8'/%3E%3Cpath d='M15 20h34v24H15z' fill='%23D9A72C'/%3E%3Cpath d='M15 20h34v12H15z' fill='%2355A6E8'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=Unbounded:wght@400;600;800&display=swap" rel="stylesheet">
@@ -190,14 +187,13 @@
   </div>
 
   <footer>
-    <button class="act" id="btnExport">Зберегти у файл</button>
-    <button class="act" id="btnImport">Завантажити з файлу</button>
     <button class="act" id="btnLink">Створити посилання</button>
+    <button class="act" id="btnShot">Зробити скріншот</button>
+    <button class="act" id="btnShare">Поділитися</button>
     <button class="act danger" id="btnReset">Скинути все</button>
-    <input type="file" id="file" accept="application/json,.json" hidden>
   </footer>
   <input id="link" readonly aria-label="Посилання на вашу мапу">
-  <p class="note">Позначки зберігаються у цьому браузері автоматично. Посилання містить усі позначки — ним можна поділитися або відкрити мапу на іншому пристрої.</p>
+  <p class="note">Позначки зберігаються у цьому браузері автоматично. Посилання містить усі позначки — ним можна поділитися або відкрити мапу на іншому пристрої. Скріншот створює зображення мапи для збереження або публікації в соцмережах.</p>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -214,6 +210,7 @@ const STATUSES = [
   {id:"none",    label:"Не був",           short:"Не був"}
 ];
 const SORDER = ["home","been","transit","none"];
+const COLORS = {home:"#2F5FA8", been:"#4C8F5E", transit:"#D9A72C", none:"#BE4F45"};
 
 /* ---------------- географія (точні контури, проєкція вбудована) ---------------- */
 const REGIONS = [
@@ -373,11 +370,16 @@ function setBrush(id){
 }
 
 /* ---------------- рендер ---------------- */
-function render(){
+function getCounts(){
   const counts = {home:0,been:0,transit:0,none:0};
+  REGIONS.forEach(r=> counts[state[r.id]]++);
+  return counts;
+}
+
+function render(){
+  const counts = getCounts();
   REGIONS.forEach(r=>{
     const v = state[r.id];
-    counts[v]++;
     r.el.setAttribute("data-s", v);
     r.dot.dataset.s = v;
     r.txt.classList.toggle("dark", v==="transit");
@@ -438,31 +440,137 @@ function toast(msg){
   clearTimeout(toastT); toastT = setTimeout(()=>toastEl.classList.remove("on"), 2400);
 }
 
-document.getElementById("btnExport").addEventListener("click", ()=>{
-  const data = {app:"mapa-ukrainy", version:1, saved:new Date().toISOString(), regions:state};
-  const blob = new Blob([JSON.stringify(data,null,2)], {type:"application/json"});
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "moya-mapa-ukrainy.json";
-  a.click();
-  setTimeout(()=>URL.revokeObjectURL(a.href), 1000);
-  toast("Файл збережено");
+/* ---------------- скріншот / поділитися ---------------- */
+function roundRectPath(ctx,x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.arcTo(x+w,y,x+w,y+h,r);
+  ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r);
+  ctx.arcTo(x,y,x+w,y,r);
+  ctx.closePath();
+}
+
+function svgToStandaloneString(svgEl){
+  const clone = svgEl.cloneNode(true);
+  const origAll = svgEl.querySelectorAll("*");
+  const cloneAll = clone.querySelectorAll("*");
+  const props = ["fill","stroke","stroke-width","stroke-linejoin","paint-order","font-family","font-size","font-weight","text-anchor","opacity"];
+  origAll.forEach((el,i)=>{
+    const cs = getComputedStyle(el);
+    const target = cloneAll[i];
+    if(!target) return;
+    props.forEach(p=>{
+      const v = cs.getPropertyValue(p);
+      if(v) target.style.setProperty(p, v);
+    });
+  });
+  clone.setAttribute("xmlns","http://www.w3.org/2000/svg");
+  const bg = document.createElementNS(NS,"rect");
+  bg.setAttribute("x","0"); bg.setAttribute("y","0");
+  bg.setAttribute("width", String(MAP_W)); bg.setAttribute("height", String(MAP_H));
+  bg.setAttribute("fill", getComputedStyle(document.getElementById("plate")).backgroundColor || "#F5F6F2");
+  clone.insertBefore(bg, clone.firstChild);
+  return new XMLSerializer().serializeToString(clone);
+}
+
+async function buildShareCanvas(){
+  try{ await document.fonts.ready; }catch(e){}
+
+  const svgString = svgToStandaloneString(svg);
+  const svgBlob = new Blob([svgString], {type:"image/svg+xml;charset=utf-8"});
+  const svgUrl = URL.createObjectURL(svgBlob);
+  const img = new Image();
+  await new Promise((res,rej)=>{ img.onload=res; img.onerror=rej; img.src=svgUrl; });
+
+  const W = 1080, PAD = 44;
+  const mapW = W - PAD*2;
+  const mapH = mapW * (MAP_H / MAP_W);
+  const titleH = 46, subtitleH = 30, legendH = 34, gapS = 16;
+  const H = PAD + titleH + subtitleH + gapS + legendH + gapS + mapH + PAD;
+
+  const canvas = document.createElement("canvas");
+  const dpr = 2;
+  canvas.width = W*dpr; canvas.height = H*dpr;
+  const ctx = canvas.getContext("2d");
+  ctx.scale(dpr,dpr);
+
+  ctx.fillStyle = "#F5F6F2";
+  roundRectPath(ctx,0,0,W,H,14); ctx.fill();
+  ctx.strokeStyle = "#131A1E"; ctx.lineWidth = 1.4;
+  roundRectPath(ctx,0.7,0.7,W-1.4,H-1.4,14); ctx.stroke();
+
+  ctx.fillStyle = "#131A1E";
+  ctx.font = "800 32px Unbounded, Onest, sans-serif";
+  ctx.fillText("Моя мапа України", PAD, PAD + 32);
+
+  const counts = getCounts();
+  const total = REGIONS.length;
+  const visited = counts.home + counts.been + counts.transit;
+  const pct = Math.round(visited/total*100);
+  ctx.font = "600 18px Onest, sans-serif";
+  ctx.fillStyle = "#5C6862";
+  ctx.fillText(`${pct}% де я вже бував · ${total} регіонів`, PAD, PAD + titleH + subtitleH - 6);
+
+  let lx = PAD;
+  const ly = PAD + titleH + subtitleH + gapS;
+  const sq = 16;
+  ctx.font = "600 14px Onest, sans-serif";
+  STATUSES.forEach(s=>{
+    ctx.fillStyle = COLORS[s.id];
+    roundRectPath(ctx, lx, ly, sq, sq, 3); ctx.fill();
+    ctx.fillStyle = "#131A1E";
+    const label = `${s.label} · ${counts[s.id]}`;
+    ctx.fillText(label, lx+sq+7, ly+sq-3);
+    lx += sq + 7 + ctx.measureText(label).width + 26;
+  });
+
+  const my = ly + legendH + gapS;
+  ctx.drawImage(img, PAD, my, mapW, mapH);
+
+  URL.revokeObjectURL(svgUrl);
+  return canvas;
+}
+
+function downloadCanvas(canvas){
+  canvas.toBlob(blob=>{
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "moya-mapa-ukrainy.png";
+    a.click();
+    setTimeout(()=>URL.revokeObjectURL(a.href), 1000);
+  }, "image/png");
+}
+
+document.getElementById("btnShot").addEventListener("click", async ()=>{
+  try{
+    const canvas = await buildShareCanvas();
+    downloadCanvas(canvas);
+    toast("Зображення збережено");
+  }catch(e){
+    toast("Не вдалося створити зображення");
+  }
 });
 
-document.getElementById("btnImport").addEventListener("click", ()=> document.getElementById("file").click());
-document.getElementById("file").addEventListener("change", e=>{
-  const f = e.target.files[0]; if(!f) return;
-  const fr = new FileReader();
-  fr.onload = () => {
-    try{
-      apply(JSON.parse(fr.result));
-      render(); save(); toast("Позначки завантажено");
-    }catch(err){
-      toast("Не вдалося прочитати файл — потрібен JSON з цієї мапи");
+document.getElementById("btnShare").addEventListener("click", async ()=>{
+  try{
+    const canvas = await buildShareCanvas();
+    const blob = await new Promise(res=> canvas.toBlob(res, "image/png"));
+    const file = new File([blob], "moya-mapa-ukrainy.png", {type:"image/png"});
+    if(navigator.canShare && navigator.canShare({files:[file]})){
+      await navigator.share({files:[file], title:"Моя мапа України", text:"Ось де я вже побував в Україні"});
+    }else if(navigator.share){
+      await navigator.share({title:"Моя мапа України", text:"Ось де я вже побував в Україні", url: location.href});
+      downloadCanvas(canvas);
+      toast("Браузер не підтримує ділитися зображенням — воно завантажено окремо");
+    }else{
+      downloadCanvas(canvas);
+      toast("Цей браузер не підтримує «Поділитися» — зображення завантажено, поділись ним вручну");
     }
-  };
-  fr.readAsText(f);
-  e.target.value = "";
+  }catch(e){
+    if(e && e.name === "AbortError") return;
+    toast("Не вдалося поділитися");
+  }
 });
 
 document.getElementById("btnLink").addEventListener("click", ()=>{
