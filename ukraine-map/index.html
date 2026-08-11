@@ -1,611 +1,1212 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="uk">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Моя мапа України</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=Unbounded:wght@400;600;800&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --paper:#E6E8E3;
-    --plate:#F5F6F2;
-    --ink:#131A1E;
-    --ink-soft:#5C6862;
-    --hair:#C3C9C0;
-    --void:#D5D9D2;
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Інтерактивна особиста мапа регіонів України з локальним збереженням і можливістю поділитися позначками."
+    />
+    <meta name="theme-color" content="#E6E8E3" />
+    <title>Моя мапа України</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232F5FA8'/%3E%3Cpath d='M15 20h34v24H15z' fill='%23D9A72C'/%3E%3Cpath d='M15 20h34v12H15z' fill='%2355A6E8'/%3E%3C/svg%3E"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=Unbounded:wght@400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --paper: #e6e8e3;
+        --plate: #f5f6f2;
+        --ink: #131a1e;
+        --ink-soft: #5c6862;
+        --hair: #c3c9c0;
+        --void: #d5d9d2;
 
-    --c-home:#2F5FA8;
-    --c-been:#4C8F5E;
-    --c-transit:#D9A72C;
-    --c-none:#BE4F45;
+        --c-home: #2f5fa8;
+        --c-been: #4c8f5e;
+        --c-transit: #d9a72c;
+        --c-none: #be4f45;
 
-    --r:4px;
-    --pad:clamp(14px,3vw,30px);
-  }
-  *{box-sizing:border-box}
-  html,body{margin:0;padding:0}
-  body{
-    background:var(--paper);
-    color:var(--ink);
-    font-family:"Onest",system-ui,"Segoe UI",Roboto,sans-serif;
-    font-size:15px;
-    line-height:1.45;
-    -webkit-font-smoothing:antialiased;
-  }
-  .wrap{max-width:1180px;margin:0 auto;padding:var(--pad)}
+        --r: 4px;
+        --pad: clamp(14px, 3vw, 30px);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background: var(--paper);
+        color: var(--ink);
+        font-family: "Onest", system-ui, "Segoe UI", Roboto, sans-serif;
+        font-size: 15px;
+        line-height: 1.45;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: var(--pad);
+      }
 
-  /* ---------- header ---------- */
-  header{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:18px}
-  .eyebrow{
-    font-size:11px;letter-spacing:.22em;text-transform:uppercase;
-    color:var(--ink-soft);margin:0 0 6px;font-weight:600;
-  }
-  h1{
-    font-family:"Unbounded","Onest",system-ui,sans-serif;
-    font-weight:800;font-size:clamp(26px,4.6vw,44px);
-    letter-spacing:-.02em;margin:0;line-height:1;
-  }
-  .score{text-align:right;line-height:1}
-  .score b{
-    font-family:"Unbounded","Onest",sans-serif;
-    font-size:clamp(28px,5vw,46px);font-weight:800;letter-spacing:-.03em;display:block;
-  }
-  .score span{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);font-weight:600}
+      /* ---------- header ---------- */
+      header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-bottom: 18px;
+      }
+      .eyebrow {
+        font-size: 11px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--ink-soft);
+        margin: 0 0 6px;
+        font-weight: 600;
+      }
+      h1 {
+        font-family: "Unbounded", "Onest", system-ui, sans-serif;
+        font-weight: 800;
+        font-size: clamp(26px, 4.6vw, 44px);
+        letter-spacing: -0.02em;
+        margin: 0;
+        line-height: 1;
+      }
+      .score {
+        text-align: right;
+        line-height: 1;
+      }
+      .score b {
+        font-family: "Unbounded", "Onest", sans-serif;
+        font-size: clamp(28px, 5vw, 46px);
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        display: block;
+      }
+      .score span {
+        font-size: 11px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--ink-soft);
+        font-weight: 600;
+      }
 
-  /* ---------- ribbon (legend + stats + brush) ---------- */
-  .ribbon{
-    display:flex;width:100%;border:1px solid var(--ink);border-radius:var(--r);
-    overflow:hidden;background:var(--plate);margin-bottom:6px;
-  }
-  .seg{
-    flex:1 1 auto;min-width:0;border:0;padding:11px 12px 10px;cursor:pointer;
-    background:transparent;text-align:left;font:inherit;color:#fff;
-    display:flex;flex-direction:column;gap:2px;position:relative;
-    transition:flex-grow .35s ease;
-  }
-  @media (prefers-reduced-motion:reduce){.seg{transition:none}}
-  .seg + .seg{border-left:1px solid rgba(0,0,0,.25)}
-  .seg-n{font-family:"Unbounded","Onest",sans-serif;font-weight:600;font-size:17px;line-height:1}
-  .seg-l{font-size:11.5px;line-height:1.2;opacity:.95;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .seg[data-s="home"]{background:var(--c-home)}
-  .seg[data-s="been"]{background:var(--c-been)}
-  .seg[data-s="transit"]{background:var(--c-transit);color:#2A2103}
-  .seg[data-s="none"]{background:var(--c-none)}
-  .seg[aria-pressed="true"]::after{
-    content:"";position:absolute;inset:auto 6px 4px 6px;height:3px;background:currentColor;border-radius:2px;
-  }
-  .seg:focus-visible{outline:3px solid var(--ink);outline-offset:-3px}
-  .brushline{font-size:12.5px;color:var(--ink-soft);margin:0 0 18px}
-  .brushline b{color:var(--ink);font-weight:600}
+      /* ---------- ribbon (legend + stats + brush) ---------- */
+      .ribbon {
+        display: flex;
+        width: 100%;
+        border: 1px solid var(--ink);
+        border-radius: var(--r);
+        overflow: hidden;
+        background: var(--plate);
+        margin-bottom: 6px;
+      }
+      .seg {
+        flex: 1 1 auto;
+        min-width: 0;
+        border: 0;
+        padding: 11px 12px 10px;
+        cursor: pointer;
+        background: transparent;
+        text-align: left;
+        font: inherit;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        position: relative;
+        transition: flex-grow 0.35s ease;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .seg {
+          transition: none;
+        }
+      }
+      .seg + .seg {
+        border-left: 1px solid rgba(0, 0, 0, 0.25);
+      }
+      .seg-n {
+        font-family: "Unbounded", "Onest", sans-serif;
+        font-weight: 600;
+        font-size: 17px;
+        line-height: 1;
+      }
+      .seg-l {
+        font-size: 11.5px;
+        line-height: 1.2;
+        opacity: 0.95;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .seg[data-s="home"] {
+        background: var(--c-home);
+      }
+      .seg[data-s="been"] {
+        background: var(--c-been);
+      }
+      .seg[data-s="transit"] {
+        background: var(--c-transit);
+        color: #2a2103;
+      }
+      .seg[data-s="none"] {
+        background: var(--c-none);
+      }
+      .seg[aria-pressed="true"]::after {
+        content: "";
+        position: absolute;
+        inset: auto 6px 4px 6px;
+        height: 3px;
+        background: currentColor;
+        border-radius: 2px;
+      }
+      .seg:focus-visible {
+        outline: 3px solid var(--ink);
+        outline-offset: -3px;
+      }
+      .brushline {
+        font-size: 12.5px;
+        color: var(--ink-soft);
+        margin: 0 0 18px;
+      }
+      .brushline b {
+        color: var(--ink);
+        font-weight: 600;
+      }
 
-  /* ---------- layout ---------- */
-  .cols{display:grid;grid-template-columns:minmax(0,1fr) 268px;gap:18px;align-items:start}
-  @media (max-width:860px){.cols{grid-template-columns:1fr}}
+      /* ---------- layout ---------- */
+      .cols {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 268px;
+        gap: 18px;
+        align-items: start;
+      }
+      @media (max-width: 860px) {
+        .cols {
+          grid-template-columns: 1fr;
+        }
+      }
 
-  .plate{
-    background:var(--plate);border:1px solid var(--ink);border-radius:var(--r);
-    padding:8px;position:relative;
-  }
-  svg.map{display:block;width:100%;height:auto;touch-action:manipulation}
-  .rg{stroke:var(--plate);stroke-width:.9;cursor:pointer;transition:filter .12s ease}
-  .rg:hover{filter:brightness(1.14)}
-  .rg:focus-visible{outline:none;stroke:var(--ink);stroke-width:2}
-  .rg[data-s="home"]{fill:var(--c-home)}
-  .rg[data-s="been"]{fill:var(--c-been)}
-  .rg[data-s="transit"]{fill:var(--c-transit)}
-  .rg[data-s="none"]{fill:var(--c-none)}
-  .lbl{
-    font-family:"Onest",sans-serif;font-size:8.6px;font-weight:600;fill:#fff;
-    pointer-events:none;text-anchor:middle;paint-order:stroke;
-    stroke:rgba(0,0,0,.28);stroke-width:1.6px;stroke-linejoin:round;
-  }
-  .lbl.dark{fill:#2A2103;stroke:rgba(255,255,255,.4)}
-  .leader{stroke:var(--ink);stroke-width:.6;fill:none;opacity:.55}
+      .plate {
+        background: var(--plate);
+        border: 1px solid var(--ink);
+        border-radius: var(--r);
+        padding: 8px;
+        position: relative;
+      }
+      svg.map {
+        display: block;
+        width: 100%;
+        height: auto;
+        touch-action: manipulation;
+      }
+      .rg {
+        stroke: var(--plate);
+        stroke-width: 0.9;
+        cursor: pointer;
+        transition: filter 0.12s ease;
+      }
+      .rg:hover {
+        filter: brightness(1.14);
+      }
+      .rg:focus-visible {
+        outline: none;
+        stroke: var(--ink);
+        stroke-width: 2;
+      }
+      .rg[data-s="home"] {
+        fill: var(--c-home);
+      }
+      .rg[data-s="been"] {
+        fill: var(--c-been);
+      }
+      .rg[data-s="transit"] {
+        fill: var(--c-transit);
+      }
+      .rg[data-s="none"] {
+        fill: var(--c-none);
+      }
+      .lbl {
+        font-family: "Onest", sans-serif;
+        font-size: 8.6px;
+        font-weight: 600;
+        fill: #fff;
+        pointer-events: none;
+        text-anchor: middle;
+        paint-order: stroke;
+        stroke: rgba(0, 0, 0, 0.28);
+        stroke-width: 1.6px;
+        stroke-linejoin: round;
+      }
+      .lbl.dark {
+        fill: #2a2103;
+        stroke: rgba(255, 255, 255, 0.4);
+      }
+      .leader {
+        stroke: var(--ink);
+        stroke-width: 0.6;
+        fill: none;
+        opacity: 0.55;
+      }
 
-  .tip{
-    position:absolute;pointer-events:none;background:var(--ink);color:#fff;
-    padding:5px 9px;border-radius:3px;font-size:12px;white-space:nowrap;
-    transform:translate(-50%,-135%);opacity:0;transition:opacity .1s;z-index:5;
-  }
-  .tip.on{opacity:1}
-  .tip i{font-style:normal;opacity:.65}
+      .tip {
+        position: absolute;
+        pointer-events: none;
+        background: var(--ink);
+        color: #fff;
+        padding: 5px 9px;
+        border-radius: 3px;
+        font-size: 12px;
+        white-space: nowrap;
+        transform: translate(-50%, -135%);
+        opacity: 0;
+        transition: opacity 0.1s;
+        z-index: 5;
+      }
+      .tip.on {
+        opacity: 1;
+      }
+      .tip i {
+        font-style: normal;
+        opacity: 0.65;
+      }
 
-  /* ---------- list ---------- */
-  .panel{
-    background:var(--plate);border:1px solid var(--ink);border-radius:var(--r);
-    padding:12px;max-height:640px;overflow:auto;
-  }
-  .panel h2{
-    font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft);
-    margin:0 0 8px;font-weight:600;
-  }
-  ul.list{list-style:none;margin:0;padding:0}
-  ul.list li{margin:0 0 1px}
-  .row{
-    width:100%;display:flex;align-items:center;gap:8px;background:transparent;border:0;
-    font:inherit;font-size:13.5px;color:var(--ink);padding:5px 6px;border-radius:3px;
-    cursor:pointer;text-align:left;
-  }
-  .row:hover{background:rgba(0,0,0,.055)}
-  .row:focus-visible{outline:2px solid var(--ink);outline-offset:-2px}
-  .dot{width:10px;height:10px;border-radius:2px;flex:0 0 auto}
-  .dot[data-s="home"]{background:var(--c-home)}
-  .dot[data-s="been"]{background:var(--c-been)}
-  .dot[data-s="transit"]{background:var(--c-transit)}
-  .dot[data-s="none"]{background:var(--c-none)}
-  .row span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+      /* ---------- list ---------- */
+      .panel {
+        background: var(--plate);
+        border: 1px solid var(--ink);
+        border-radius: var(--r);
+        padding: 12px;
+        max-height: 640px;
+        overflow: auto;
+      }
+      .panel h2 {
+        font-size: 11px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--ink-soft);
+        margin: 0 0 8px;
+        font-weight: 600;
+      }
+      ul.list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+      ul.list li {
+        margin: 0 0 1px;
+      }
+      .row {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: transparent;
+        border: 0;
+        font: inherit;
+        font-size: 13.5px;
+        color: var(--ink);
+        padding: 5px 6px;
+        border-radius: 3px;
+        cursor: pointer;
+        text-align: left;
+      }
+      .row:hover {
+        background: rgba(0, 0, 0, 0.055);
+      }
+      .row:focus-visible {
+        outline: 2px solid var(--ink);
+        outline-offset: -2px;
+      }
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 2px;
+        flex: 0 0 auto;
+      }
+      .dot[data-s="home"] {
+        background: var(--c-home);
+      }
+      .dot[data-s="been"] {
+        background: var(--c-been);
+      }
+      .dot[data-s="transit"] {
+        background: var(--c-transit);
+      }
+      .dot[data-s="none"] {
+        background: var(--c-none);
+      }
+      .row span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
 
-  /* ---------- footer actions ---------- */
-  footer{margin-top:18px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-  button.act{
-    font:inherit;font-size:13px;font-weight:500;padding:8px 14px;border-radius:3px;
-    border:1px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer;
-  }
-  button.act:hover{background:var(--ink);color:var(--plate)}
-  button.act.danger{border-color:var(--c-none);color:var(--c-none)}
-  button.act.danger:hover{background:var(--c-none);color:#fff}
-  button.act:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
-  .note{font-size:12px;color:var(--ink-soft);margin:12px 0 0;max-width:60ch}
-  #link{width:100%;margin-top:10px;font:inherit;font-size:12px;padding:8px;border:1px solid var(--hair);border-radius:3px;background:#fff;display:none}
-  .toast{
-    position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(10px);
-    background:var(--ink);color:#fff;padding:9px 16px;border-radius:3px;font-size:13px;
-    opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;z-index:20;
-  }
-  .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
-</style>
-</head>
-<body>
-<div class="wrap">
+      /* ---------- footer actions ---------- */
+      footer {
+        margin-top: 18px;
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      button.act {
+        font: inherit;
+        font-size: 13px;
+        font-weight: 500;
+        padding: 8px 14px;
+        border-radius: 3px;
+        border: 1px solid var(--ink);
+        background: transparent;
+        color: var(--ink);
+        cursor: pointer;
+      }
+      button.act:hover {
+        background: var(--ink);
+        color: var(--plate);
+      }
+      button.act.danger {
+        border-color: var(--c-none);
+        color: var(--c-none);
+      }
+      button.act.danger:hover {
+        background: var(--c-none);
+        color: #fff;
+      }
+      button.act:focus-visible {
+        outline: 2px solid var(--ink);
+        outline-offset: 2px;
+      }
+      .note {
+        font-size: 12px;
+        color: var(--ink-soft);
+        margin: 12px 0 0;
+        max-width: 60ch;
+      }
+      #link {
+        width: 100%;
+        margin-top: 10px;
+        font: inherit;
+        font-size: 12px;
+        padding: 8px;
+        border: 1px solid var(--hair);
+        border-radius: 3px;
+        background: #fff;
+        display: none;
+      }
+      .toast {
+        position: fixed;
+        left: 50%;
+        bottom: 22px;
+        transform: translateX(-50%) translateY(10px);
+        background: var(--ink);
+        color: #fff;
+        padding: 9px 16px;
+        border-radius: 3px;
+        font-size: 13px;
+        opacity: 0;
+        pointer-events: none;
+        transition:
+          opacity 0.18s,
+          transform 0.18s;
+        z-index: 20;
+      }
+      .toast.on {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <div>
+          <p class="eyebrow">27 регіонів · особиста мапа</p>
+          <h1>Моя мапа України</h1>
+        </div>
+        <div class="score">
+          <b id="pct">0%</b>
+          <span>де я вже бував</span>
+        </div>
+      </header>
 
-  <header>
-    <div>
-      <p class="eyebrow">27 регіонів · особиста мапа</p>
-      <h1>Моя мапа України</h1>
+      <div
+        class="ribbon"
+        id="ribbon"
+        role="group"
+        aria-label="Вибір кольору та статистика"
+      ></div>
+      <p class="brushline">
+        Обраний колір: <b id="brushName">—</b> · натисніть на область на мапі
+        або в списку, щоб позначити. Клавіші 1–4 перемикають колір.
+      </p>
+
+      <div class="cols">
+        <div class="plate" id="plate">
+          <div class="tip" id="tip"></div>
+          <svg
+            class="map"
+            id="map"
+            viewBox="0 0 780 523"
+            role="img"
+            aria-label="Мапа областей України"
+          ></svg>
+        </div>
+
+        <div class="panel">
+          <h2>Усі регіони</h2>
+          <ul class="list" id="list"></ul>
+        </div>
+      </div>
+
+      <footer>
+        <button class="act" id="btnLink">Створити посилання</button>
+        <button class="act" id="btnShot">Зробити скріншот</button>
+        <button class="act" id="btnShare">Поділитися</button>
+        <button class="act danger" id="btnReset">Скинути все</button>
+      </footer>
+      <input id="link" readonly aria-label="Посилання на вашу мапу" />
+      <p class="note">
+        Позначки зберігаються у цьому браузері автоматично. Посилання містить
+        усі позначки — ним можна поділитися або відкрити мапу на іншому
+        пристрої. Скріншот створює зображення мапи для збереження або публікації
+        в соцмережах.
+      </p>
     </div>
-    <div class="score">
-      <b id="pct">0%</b>
-      <span>де я вже бував</span>
-    </div>
-  </header>
 
-  <div class="ribbon" id="ribbon" role="group" aria-label="Вибір кольору та статистика"></div>
-  <p class="brushline">Обраний колір: <b id="brushName">—</b> · натисніть на область на мапі або в списку, щоб позначити. Клавіші 1–4 перемикають колір.</p>
+    <div class="toast" id="toast"></div>
 
-  <div class="cols">
-    <div class="plate" id="plate">
-      <div class="tip" id="tip"></div>
-      <svg class="map" id="map" viewBox="0 0 780 523" role="img" aria-label="Мапа областей України"></svg>
-    </div>
+    <script>
+      (function () {
+        "use strict";
 
-    <div class="panel">
-      <h2>Усі регіони</h2>
-      <ul class="list" id="list"></ul>
-    </div>
-  </div>
+        /* ---------------- статуси ---------------- */
+        const STATUSES = [
+          { id: "home", label: "Народився / живу", short: "Дім" },
+          { id: "been", label: "Був", short: "Був" },
+          { id: "transit", label: "Проїздом", short: "Проїздом" },
+          { id: "none", label: "Не був", short: "Не був" },
+        ];
+        const SORDER = ["home", "been", "transit", "none"];
+        const COLORS = {
+          home: "#2F5FA8",
+          been: "#4C8F5E",
+          transit: "#D9A72C",
+          none: "#BE4F45",
+        };
 
-  <footer>
-    <button class="act" id="btnLink">Створити посилання</button>
-    <button class="act" id="btnShot">Зробити скріншот</button>
-    <button class="act" id="btnShare">Поділитися</button>
-    <button class="act danger" id="btnReset">Скинути все</button>
-  </footer>
-  <input id="link" readonly aria-label="Посилання на вашу мапу">
-  <p class="note">Позначки зберігаються у цьому браузері автоматично. Посилання містить усі позначки — ним можна поділитися або відкрити мапу на іншому пристрої. Скріншот створює зображення мапи для збереження або публікації в соцмережах.</p>
-</div>
+        /* ---------------- географія (точні контури, проєкція вбудована) ---------------- */
+        const REGIONS = [
+          {
+            id: "odesa",
+            name: "Одеська",
+            cx: 331.8,
+            cy: 366.9,
+            d: "M326.88,439.60L339.68,428.39L342.05,427.24L331.70,436.37L326.88,439.60ZM391.87,375.12L382.95,376.70L377.28,379.58L374.33,379.14L372.10,382.02L373.97,386.62L368.65,394.74L367.00,398.70L359.45,410.20L353.62,415.38L348.38,421.92L342.62,426.66L342.62,422.13L340.61,426.95L335.94,424.65L334.00,429.54L332.49,427.60L332.92,432.63L331.41,430.76L327.02,431.48L329.68,435.87L323.50,439.46L321.42,433.92L322.14,428.39L319.91,425.30L317.75,434.14L316.74,442.77L321.56,442.77L317.25,447.51L319.33,450.46L323.07,448.52L323.79,458.65L321.35,464.98L319.05,465.34L319.76,461.67L318.97,456.86L315.38,453.48L304.09,449.74L299.71,450.89L297.12,453.05L287.34,457.07L285.47,459.66L279.15,456.57L278.36,462.46L269.08,460.88L257.94,455.28L255.49,447.44L252.48,445.86L255.93,442.12L265.56,443.99L268.44,439.03L265.85,433.78L270.02,430.11L270.88,427.24L275.19,426.45L275.34,424.15L278.57,422.64L278.50,416.02L279.87,414.59L289.14,412.43L289.00,405.67L292.37,400.71L288.92,395.54L289.64,392.59L288.78,385.97L290.15,382.74L300.21,377.78L302.08,380.22L301.36,389.71L305.24,387.27L307.11,382.67L308.84,386.19L313.37,381.88L314.23,385.83L316.96,386.76L319.40,390.14L324.94,383.31L330.62,392.01L333.93,390.07L341.33,390.29L343.70,387.20L341.26,387.12L337.74,382.02L334.21,380.51L333.49,378.28L335.87,376.70L335.15,373.97L336.37,365.92L335.51,361.53L331.84,358.44L327.82,358.01L325.30,354.85L319.26,351.90L321.56,345.43L319.33,342.48L317.54,343.99L316.31,340.54L319.55,337.88L319.48,332.99L321.20,329.83L320.27,327.17L316.96,326.09L313.58,329.76L311.57,324.87L309.05,323.07L306.25,318.47L303.16,318.76L301.43,312.50L304.52,307.47L305.53,300.64L307.47,298.20L304.88,295.90L307.76,290.72L305.60,289.71L303.16,283.53L300.35,283.82L298.34,286.26L295.39,285.83L291.73,281.38L300.07,276.34L299.99,273.40L302.80,272.53L308.91,276.70L312.93,276.77L317.25,275.26L319.91,276.70L327.89,277.06L327.53,272.03L332.42,270.02L337.45,271.38L338.96,269.08L342.12,269.23L345.79,274.40L354.92,275.26L355.85,277.49L351.68,279.22L351.25,284.11L354.70,287.77L355.49,294.89L358.58,297.91L359.45,307.40L361.82,309.20L366.85,308.41L370.23,309.20L371.45,311.71L375.33,308.84L375.69,312.07L379.07,314.88L377.35,322.28L380.65,332.42L386.19,334.21L391.15,332.92L392.08,335.08L389.50,338.81L394.24,339.96L397.76,344.28L395.75,350.75L393.59,352.55L385.61,353.70L386.33,357.43L391.01,362.25L391.87,375.12ZM343.49,390.36L343.13,394.89L346.08,398.48L351.04,400.50L353.84,403.80L356.21,409.34L359.88,406.10L356.36,402.58L355.49,397.91L352.83,396.25L351.68,390.65L350.82,394.82L347.08,389.07L343.49,390.36Z",
+          },
+          {
+            id: "kherson",
+            name: "Херсонська",
+            cx: 499.4,
+            cy: 371.8,
+            d: "M457.14,413.29L463.69,414.23L472.60,413.72L475.40,416.46L457.14,413.29ZM435.07,406.82L416.24,402.29L410.85,399.71L431.34,405.02L435.07,406.82ZM577.13,399.06L572.02,407.47L564.76,411.28L566.63,406.75L573.68,403.87L576.48,398.70L576.55,398.77L577.13,399.06ZM569.15,396.69L565.84,399.56L561.53,400.78L560.09,399.49L555.99,405.38L556.71,411.21L559.23,421.06L565.41,433.85L564.26,434.57L559.80,425.80L556.71,428.53L558.08,421.99L556.86,421.13L555.49,414.37L553.62,415.59L549.24,410.70L553.12,409.34L554.20,407.04L550.82,404.59L547.29,405.89L548.01,410.99L545.50,416.74L541.33,418.76L537.95,416.31L539.60,409.55L542.98,408.19L544.35,410.99L545.14,406.10L543.84,404.31L541.18,407.11L533.20,402.72L533.64,409.34L529.82,401.43L527.24,398.55L525.73,401.50L528.24,404.81L526.45,406.82L524.72,403.16L522.64,404.88L525.44,408.76L520.91,407.97L518.25,403.80L514.22,401.86L507.90,401.00L504.02,402.94L504.16,405.82L502.22,408.98L500.71,406.97L497.83,409.19L498.98,411.42L497.12,414.15L492.95,413.72L489.93,410.42L486.84,410.99L486.98,408.33L483.38,408.84L484.32,402.58L481.59,407.18L479.21,408.33L474.69,406.10L474.40,408.91L469.65,409.70L464.05,408.40L454.84,410.34L450.96,412.21L440.04,408.69L440.39,403.66L433.42,402.94L430.47,399.56L429.04,400.14L423.07,395.97L422.85,398.63L417.89,396.97L419.98,394.03L426.81,393.95L431.12,391.22L428.68,387.56L420.05,385.18L420.05,385.18L421.70,382.67L429.90,383.82L433.42,383.46L440.83,386.26L444.71,386.55L446.86,383.24L452.11,378.35L454.27,378.14L457.65,374.69L446.94,379.86L443.63,380.29L439.89,377.49L435.07,380.37L433.78,377.28L429.54,375.77L426.95,369.66L431.84,368.07L436.30,368.15L438.67,364.34L444.78,364.62L446.15,362.18L452.62,362.11L452.90,360.02L459.01,361.68L460.24,363.11L465.63,363.11L470.95,360.81L464.98,359.95L474.25,355.71L471.52,354.63L472.46,351.75L474.69,353.70L476.34,350.75L470.23,346.79L469.80,345.00L472.53,339.53L475.76,339.82L479.65,336.66L478.28,333.93L479.14,330.33L477.99,326.74L474.76,325.01L476.48,322.35L479.14,324.51L478.71,317.03L477.56,313.58L486.62,316.67L488.42,319.26L494.74,316.96L498.55,314.01L499.56,317.97L502.65,319.76L513.58,317.82L520.55,319.98L527.02,320.05L531.48,333.49L535.72,333.21L537.23,330.69L540.25,330.33L539.39,333.49L541.11,343.70L542.48,344.57L543.77,350.75L545.50,353.26L550.67,355.56L554.34,361.89L549.52,369.01L547.01,371.09L551.68,373.03L551.32,376.92L553.05,380.29L557.50,380.80L557.43,383.53L560.59,383.46L565.70,386.19L567.06,395.97L569.15,396.69Z",
+          },
+          {
+            id: "kyiv_city",
+            name: "м. Київ",
+            cx: 370.3,
+            cy: 125.9,
+            lx: 430.3,
+            ly: 107.9,
+            d: "M383.60,115.67L379.58,120.63L379.86,125.02L383.31,130.77L380.94,132.06L380.94,134.72L378.14,133.50L377.78,136.59L373.03,136.09L374.83,143.49L373.39,145.65L374.33,151.47L371.67,152.69L370.01,147.16L369.30,141.05L367.50,140.40L365.05,133.43L361.82,129.11L361.32,126.45L358.01,125.95L355.71,127.68L357.43,117.54L359.23,116.03L359.81,111.64L362.54,109.85L366.71,109.99L368.29,114.45L371.24,117.61L371.45,115.53L375.41,116.03L378.50,112.94L379.43,110.06L383.39,112.08L383.60,115.67Z",
+          },
+          {
+            id: "zhytomyr",
+            name: "Житомирська",
+            cx: 284.9,
+            cy: 108.5,
+            d: "M255.42,49.68L257.29,51.54L260.53,48.67L261.96,42.77L263.69,41.98L266.85,45.43L272.32,46.37L278.36,40.62L282.17,45.94L283.39,49.24L289.43,46.58L294.03,48.02L294.82,53.99L297.69,55.57L298.56,58.30L299.85,52.98L304.67,48.31L308.41,48.24L312.22,44.36L315.52,44.57L319.33,51.76L318.97,55.14L321.71,61.39L324.08,61.32L325.59,62.83L325.08,66.50L320.20,70.31L321.56,78.22L323.07,76.49L328.39,81.52L327.24,88.21L324.65,87.42L328.75,95.54L327.74,100.14L331.12,101.51L331.84,105.39L326.74,112.87L328.10,114.66L327.31,119.05L325.01,124.73L328.61,124.08L330.40,126.31L331.55,131.13L334.86,135.30L334.57,140.69L336.08,144.28L333.21,146.22L333.28,151.54L335.51,155.71L330.91,160.96L322.50,165.35L321.49,170.74L324.15,170.95L322.50,174.55L314.66,178.43L303.37,177.57L301.72,170.88L303.95,168.36L301.50,164.48L300.43,158.88L297.33,158.08L291.73,163.55L285.76,163.69L279.87,161.97L278.07,163.84L272.89,162.76L262.54,163.98L255.85,163.55L247.23,160.39L244.64,153.63L242.70,152.41L244.50,150.32L243.42,146.37L248.45,145.07L246.87,141.91L248.31,136.09L247.08,130.69L241.98,131.99L238.82,126.88L231.99,119.98L235.51,114.81L231.20,110.28L233.21,107.69L231.56,105.25L235.51,97.70L233.93,93.74L234.93,87.56L233.71,80.88L237.95,77.71L241.12,71.53L245.29,66.14L244.57,60.89L246.87,60.53L248.52,52.41L251.61,55.71L252.12,50.61L255.42,49.68Z",
+          },
+          {
+            id: "sumy",
+            name: "Сумська",
+            cx: 519.4,
+            cy: 83.2,
+            d: "M489.71,1.58L492.87,0.65L494.96,5.18L501.21,0.72L505.89,0.79L512.14,9.20L516.17,12.72L516.81,21.85L517.96,27.03L520.05,27.03L523.50,30.70L529.90,35.59L531.12,40.91L529.61,42.77L519.54,44.79L517.60,47.23L520.12,48.67L523.64,55.57L523.57,61.32L522.20,63.48L526.95,65.13L526.30,69.52L522.35,73.04L526.37,74.41L531.55,72.61L540.39,74.26L541.26,77.14L545.64,78.07L554.34,74.55L558.36,74.62L560.02,76.49L561.24,82.46L563.33,85.76L570.51,85.76L567.78,88.78L568.57,92.31L570.59,93.67L572.38,101.44L574.97,103.66L576.41,109.70L572.74,112.94L575.91,122.36L579.14,123.36L581.30,128.75L586.47,130.69L585.90,132.13L578.28,132.64L574.40,131.77L573.53,134.51L571.31,133.79L568.36,137.81L563.33,137.88L558.44,142.84L556.86,141.55L553.91,144.64L549.95,143.85L545.35,144.57L543.92,146.87L538.31,146.44L535.72,147.59L534.93,145.00L536.87,143.13L533.49,136.88L531.62,137.45L531.41,132.28L526.23,126.24L525.66,119.77L524.22,119.34L517.39,124.08L511.71,120.27L507.32,122.28L508.76,123.43L503.73,124.80L500.57,123.36L487.77,120.77L485.47,119.48L482.23,121.28L476.20,119.98L477.85,112.00L480.44,105.89L478.78,104.31L479.72,97.48L481.01,95.97L480.01,90.44L482.16,86.55L477.06,87.63L474.47,84.76L471.31,83.54L472.24,77.78L474.40,77.14L476.48,73.40L475.62,67.36L473.61,64.92L478.14,65.35L478.57,56.43L481.23,55.93L479.21,47.23L479.86,44.28L477.06,41.12L476.12,37.74L480.15,30.48L482.74,30.34L488.42,27.68L487.91,24.73L489.28,20.34L492.37,20.92L491.72,18.40L486.76,14.16L486.40,10.42L488.06,7.91L489.71,1.58Z",
+          },
+          {
+            id: "donetsk",
+            name: "Донецька",
+            cx: 678.6,
+            cy: 277.4,
+            d: "M739.60,285.26L732.62,285.47L730.61,286.48L728.31,291.08L727.23,297.98L724.65,297.69L719.83,301.86L710.63,303.80L708.18,306.90L707.03,311.57L707.39,318.11L705.24,322.14L705.31,325.01L709.40,324.94L709.26,327.96L705.88,331.41L706.82,337.23L702.29,342.55L703.08,339.32L700.35,337.88L698.41,339.17L690.93,338.38L686.26,340.40L678.49,339.82L674.32,343.63L668.21,354.06L664.69,350.96L654.91,355.21L653.47,352.76L655.70,349.60L658.00,349.17L658.00,345.07L653.04,342.84L650.89,338.38L646.14,335.51L649.45,333.21L648.95,327.38L654.98,327.31L656.06,323.21L658.94,324.15L661.09,316.89L657.21,317.39L650.38,311.07L646.21,311.35L641.76,307.69L640.03,308.41L634.64,296.26L631.76,296.26L631.26,292.81L629.25,288.92L633.56,287.63L630.90,284.54L631.12,277.42L634.42,276.70L641.83,280.01L644.49,277.49L643.27,271.02L645.57,268.65L644.27,262.61L640.68,261.53L639.67,255.06L642.91,246.72L642.48,244.21L639.38,244.42L638.31,247.37L636.58,245.36L638.23,243.20L635.36,241.33L633.35,231.48L639.24,231.48L642.48,229.61L647.44,231.92L646.65,229.69L651.10,226.45L654.41,226.81L655.85,222.43L659.80,220.27L658.65,216.89L661.89,211.93L671.30,205.32L670.51,203.23L666.92,202.80L668.64,200.00L672.74,199.71L678.35,200.93L681.51,198.92L685.39,200.79L683.88,203.73L687.05,205.10L691.43,203.73L690.50,208.98L692.37,213.22L689.71,216.60L698.48,218.04L699.63,222.28L701.64,223.22L703.51,231.12L701.28,234.93L702.65,243.20L704.80,244.14L704.59,248.16L709.19,249.31L712.78,254.27L710.20,256.43L712.35,259.95L716.67,259.16L720.26,266.35L728.60,269.30L728.24,272.96L731.12,275.12L738.45,275.48L740.17,281.23L739.60,285.26Z",
+          },
+          {
+            id: "dnipro",
+            name: "Дніпропетровська",
+            cx: 553.9,
+            cy: 265.6,
+            two: true,
+            d: "M635.36,241.33L638.23,243.20L636.58,245.36L638.31,247.37L639.38,244.42L642.48,244.21L642.91,246.72L639.67,255.06L640.68,261.53L644.27,262.61L645.57,268.65L643.27,271.02L644.49,277.49L641.83,280.01L634.42,276.70L631.12,277.42L630.90,284.54L633.56,287.63L629.25,288.92L631.26,292.81L619.54,295.32L615.30,294.24L614.80,292.30L610.56,294.32L610.70,287.41L608.18,286.77L606.46,282.96L604.16,281.66L602.72,277.78L596.90,279.65L590.86,275.91L585.32,278.86L576.27,277.92L572.02,276.27L562.53,277.28L558.87,279.87L554.34,277.64L553.33,284.54L557.86,289.00L553.76,291.44L553.76,294.03L557.57,296.54L556.93,300.93L559.52,302.29L557.79,312.00L558.58,315.95L554.91,316.39L543.77,313.87L537.73,316.89L527.02,320.05L520.55,319.98L513.58,317.82L502.65,319.76L499.56,317.97L498.55,314.01L494.74,316.96L488.42,319.26L486.62,316.67L477.56,313.58L473.82,313.01L474.25,308.33L472.89,305.24L477.27,304.02L476.27,301.00L477.20,293.38L474.97,291.15L475.12,288.49L476.12,284.61L480.15,280.94L483.38,280.30L484.03,275.05L485.68,279.22L489.21,274.19L490.93,274.91L496.18,270.30L494.74,257.15L493.16,251.61L504.95,245.72L509.19,242.27L506.39,240.40L499.78,238.96L497.76,235.58L502.08,233.35L506.96,233.42L509.34,236.30L513.36,229.33L518.61,233.07L523.93,234.50L527.24,236.95L529.68,234.43L530.47,230.76L528.75,227.60L529.75,222.64L535.14,215.31L542.84,211.71L547.80,210.35L550.24,208.41L556.28,207.69L558.80,208.91L565.91,209.41L575.33,217.75L579.50,220.56L585.11,220.56L593.73,222.86L599.99,219.91L604.09,224.73L601.64,227.46L606.46,229.26L610.92,233.78L609.33,236.08L615.59,240.83L617.17,245.50L615.95,247.95L618.97,248.31L623.57,241.05L628.96,243.06L635.36,241.33Z",
+          },
+          {
+            id: "kharkiv",
+            name: "Харківська",
+            cx: 622.2,
+            cy: 177.7,
+            d: "M681.51,198.92L678.35,200.93L672.74,199.71L668.64,200.00L666.92,202.80L670.51,203.23L671.30,205.32L661.89,211.93L658.65,216.89L659.80,220.27L655.85,222.43L654.41,226.81L651.10,226.45L646.65,229.69L647.44,231.92L642.48,229.61L639.24,231.48L633.35,231.48L635.36,241.33L628.96,243.06L623.57,241.05L618.97,248.31L615.95,247.95L617.17,245.50L615.59,240.83L609.33,236.08L610.92,233.78L606.46,229.26L601.64,227.46L604.09,224.73L599.99,219.91L593.73,222.86L585.11,220.56L579.50,220.56L575.33,217.75L565.91,209.41L558.80,208.91L557.43,204.02L560.31,198.85L567.35,200.28L570.51,198.92L574.54,193.53L572.38,188.64L578.93,186.27L575.76,183.75L579.07,182.31L576.55,177.35L576.48,174.19L573.96,175.41L568.72,173.18L566.56,168.65L566.49,164.91L562.68,163.98L558.65,161.39L553.48,159.67L551.39,154.27L554.27,150.61L553.91,144.64L556.86,141.55L558.44,142.84L563.33,137.88L568.36,137.81L571.31,133.79L573.53,134.51L574.40,131.77L578.28,132.64L585.90,132.13L586.47,130.69L592.37,125.23L603.58,124.94L606.39,127.32L610.84,133.79L615.73,131.92L622.13,134.22L621.99,136.73L624.72,138.24L628.24,134.36L637.73,128.75L643.48,128.68L649.45,126.53L652.97,122.86L659.23,121.85L661.45,127.32L666.63,130.26L666.49,135.22L672.88,143.78L681.15,148.24L686.11,154.06L688.70,157.87L685.68,159.52L687.48,161.75L683.88,167.00L686.04,167.29L686.26,170.67L684.10,174.76L685.25,179.72L681.44,186.70L682.81,193.45L684.67,195.25L681.51,198.92Z",
+          },
+          {
+            id: "luhansk",
+            name: "Луганська",
+            cx: 732.9,
+            cy: 212.4,
+            d: "M739.60,285.26L740.17,281.23L738.45,275.48L731.12,275.12L728.24,272.96L728.60,269.30L720.26,266.35L716.67,259.16L712.35,259.95L710.20,256.43L712.78,254.27L709.19,249.31L704.59,248.16L704.80,244.14L702.65,243.20L701.28,234.93L703.51,231.12L701.64,223.22L699.63,222.28L698.48,218.04L689.71,216.60L692.37,213.22L690.50,208.98L691.43,203.73L687.05,205.10L683.88,203.73L685.39,200.79L681.51,198.92L684.67,195.25L682.81,193.45L681.44,186.70L685.25,179.72L684.10,174.76L686.26,170.67L686.04,167.29L683.88,167.00L687.48,161.75L685.68,159.52L688.70,157.87L686.11,154.06L692.01,151.61L691.79,143.78L697.11,143.35L699.27,147.73L705.95,150.11L712.93,148.60L714.15,151.76L721.34,154.35L725.29,158.16L729.32,157.58L732.55,153.56L735.36,153.70L738.23,159.59L742.26,161.82L747.07,159.88L752.04,161.18L755.41,168.15L763.47,172.10L768.14,170.31L770.44,167.50L776.55,167.72L776.62,170.74L774.32,172.61L774.18,176.85L780.00,184.32L779.78,190.15L772.38,198.85L771.45,204.02L761.38,206.75L761.31,210.06L765.41,214.59L771.45,215.09L773.96,216.67L776.26,214.16L778.35,215.16L777.20,218.98L773.67,221.06L768.71,219.62L763.90,224.58L761.74,235.29L769.43,234.79L771.59,236.44L771.37,240.25L775.69,247.95L771.37,252.84L774.54,254.49L779.28,254.42L778.13,257.87L775.47,260.74L773.60,265.06L774.11,270.52L770.58,272.25L772.38,274.98L771.59,284.18L769.14,285.76L764.62,284.97L755.49,286.19L752.18,284.97L742.26,286.69L739.60,285.26Z",
+          },
+          {
+            id: "poltava",
+            name: "Полтавська",
+            cx: 506.6,
+            cy: 172.7,
+            d: "M476.20,119.98L482.23,121.28L485.47,119.48L487.77,120.77L500.57,123.36L503.73,124.80L508.76,123.43L507.32,122.28L511.71,120.27L517.39,124.08L524.22,119.34L525.66,119.77L526.23,126.24L531.41,132.28L531.62,137.45L533.49,136.88L536.87,143.13L534.93,145.00L535.72,147.59L538.31,146.44L543.92,146.87L545.35,144.57L549.95,143.85L553.91,144.64L554.27,150.61L551.39,154.27L553.48,159.67L558.65,161.39L562.68,163.98L566.49,164.91L566.56,168.65L568.72,173.18L573.96,175.41L576.48,174.19L576.55,177.35L579.07,182.31L575.76,183.75L578.93,186.27L572.38,188.64L574.54,193.53L570.51,198.92L567.35,200.28L560.31,198.85L557.43,204.02L558.80,208.91L556.28,207.69L550.24,208.41L547.80,210.35L542.84,211.71L535.14,215.31L529.75,222.64L528.75,227.60L530.47,230.76L529.68,234.43L527.24,236.95L523.93,234.50L518.61,233.07L513.36,229.33L507.18,225.66L503.59,226.81L502.72,229.18L499.34,225.73L497.04,227.03L493.31,224.51L489.78,224.58L486.48,221.06L488.49,218.62L486.40,216.46L482.38,216.10L479.72,212.22L475.26,208.84L464.55,203.59L464.55,198.92L459.73,189.14L463.11,184.90L462.75,181.38L460.52,176.78L455.92,174.91L455.28,171.10L449.31,167.79L446.65,162.90L448.59,161.82L448.66,156.79L445.28,151.76L442.19,150.97L440.83,145.43L434.50,139.39L435.51,136.30L437.52,132.13L441.04,132.56L443.77,129.62L447.44,128.32L451.97,128.83L452.76,130.91L462.18,131.77L468.72,128.97L473.97,123.79L476.20,119.98Z",
+          },
+          {
+            id: "zaporizhzhia",
+            name: "Запорізька",
+            cx: 593.5,
+            cy: 332.3,
+            d: "M631.26,292.81L631.76,296.26L634.64,296.26L640.03,308.41L641.76,307.69L646.21,311.35L650.38,311.07L657.21,317.39L661.09,316.89L658.94,324.15L656.06,323.21L654.98,327.31L648.95,327.38L649.45,333.21L646.14,335.51L650.89,338.38L653.04,342.84L658.00,345.07L658.00,349.17L655.70,349.60L653.47,352.76L654.91,355.21L648.30,360.24L644.42,369.15L644.85,365.63L639.89,362.25L632.20,363.98L625.44,367.57L622.56,370.95L621.56,374.40L617.39,370.52L611.64,370.66L604.45,372.10L598.69,375.69L592.44,382.60L587.19,385.47L581.51,391.51L577.13,399.06L576.55,398.77L576.48,398.70L579.79,393.67L576.41,392.80L576.98,387.12L571.59,383.60L573.82,388.85L569.15,396.69L567.06,395.97L565.70,386.19L560.59,383.46L557.43,383.53L557.50,380.80L553.05,380.29L551.32,376.92L551.68,373.03L547.01,371.09L549.52,369.01L554.34,361.89L550.67,355.56L545.50,353.26L543.77,350.75L542.48,344.57L541.11,343.70L539.39,333.49L540.25,330.33L537.23,330.69L535.72,333.21L531.48,333.49L527.02,320.05L537.73,316.89L543.77,313.87L554.91,316.39L558.58,315.95L557.79,312.00L559.52,302.29L556.93,300.93L557.57,296.54L553.76,294.03L553.76,291.44L557.86,289.00L553.33,284.54L554.34,277.64L558.87,279.87L562.53,277.28L572.02,276.27L576.27,277.92L585.32,278.86L590.86,275.91L596.90,279.65L602.72,277.78L604.16,281.66L606.46,282.96L608.18,286.77L610.70,287.41L610.56,294.32L614.80,292.30L615.30,294.24L619.54,295.32L631.26,292.81Z",
+          },
+          {
+            id: "sevastopol",
+            name: "м. Севастополь",
+            cx: 503.0,
+            cy: 509.9,
+            lx: 433.0,
+            ly: 517.9,
+            d: "M507.83,521.99L503.87,520.19L500.71,515.52L497.83,515.95L491.36,511.21L493.95,508.47L500.35,507.47L497.62,505.60L499.13,501.64L497.69,496.68L500.13,492.30L500.64,494.46L505.02,496.18L505.74,498.70L502.15,500.85L502.79,504.74L506.75,504.38L508.69,507.18L506.96,509.98L511.35,513.43L513.58,519.69L507.83,521.99Z",
+          },
+          {
+            id: "crimea",
+            name: "АР Крим",
+            cx: 536.0,
+            cy: 462.4,
+            d: "M565.41,433.85L567.42,437.66L581.23,456.86L588.20,461.46L598.05,459.01L605.24,449.67L606.03,453.91L611.42,456.43L618.11,449.67L627.52,449.60L630.83,450.82L634.50,450.24L636.51,452.33L638.81,451.03L641.54,455.92L635.29,456.50L631.69,464.33L631.84,470.95L633.20,474.90L625.73,476.63L623.35,479.21L615.01,476.84L612.64,480.29L605.88,480.87L602.15,476.20L595.68,473.18L588.13,474.33L584.89,478.78L586.69,480.29L578.42,483.96L576.62,486.91L573.82,487.84L570.59,494.96L566.99,492.37L562.46,493.45L555.49,493.59L548.80,497.33L542.12,499.78L538.09,506.32L535.50,512.07L533.28,511.92L527.38,518.32L518.54,522.85L513.58,521.70L507.83,521.99L513.58,519.69L511.35,513.43L506.96,509.98L508.69,507.18L506.75,504.38L502.79,504.74L502.15,500.85L505.74,498.70L505.02,496.18L500.64,494.46L500.13,492.30L502.44,487.05L499.70,476.48L492.73,470.59L485.61,472.46L481.66,469.80L477.20,464.91L468.93,459.52L462.03,458.87L458.01,461.75L451.11,460.38L449.67,455.85L451.75,452.62L457.22,448.52L462.46,445.71L465.70,445.86L467.57,441.47L470.73,439.32L481.08,434.50L481.37,431.34L484.18,433.56L490.72,430.55L495.68,426.74L498.98,427.17L501.93,424.87L505.24,426.23L505.31,422.71L509.12,421.70L503.15,418.47L502.22,408.98L504.16,405.82L504.02,402.94L506.89,407.54L509.41,409.12L510.20,405.46L512.36,406.61L511.78,409.48L513.94,412.72L518.39,415.81L518.75,411.93L520.84,411.21L526.88,416.96L524.36,417.89L526.30,420.98L528.24,420.12L527.67,416.24L524.72,413.00L529.61,414.87L531.84,413.72L533.28,416.96L535.14,415.02L538.02,419.55L536.58,421.63L538.45,424.94L538.81,421.92L541.69,424.72L545.57,420.48L547.87,419.91L546.79,424.22L544.35,425.51L540.54,431.55L544.42,430.11L548.95,425.73L553.62,422.78L553.55,425.66L550.10,426.88L549.02,430.47L552.54,428.60L554.41,430.47L552.25,434.43L559.44,433.78L557.93,435.65L560.81,437.88L563.83,437.81L568.65,444.71L569.80,451.47L566.27,453.41L568.29,456.93L571.59,459.66L574.90,459.30L582.16,462.46L584.82,464.62L587.05,462.68L581.59,458.87L565.41,437.38L564.26,434.57L565.41,433.85Z",
+          },
+          {
+            id: "chernihiv",
+            name: "Чернігівська",
+            cx: 432.2,
+            cy: 66.8,
+            d: "M373.03,72.18L374.18,68.22L376.63,66.14L376.13,58.01L372.89,51.76L372.17,48.45L373.97,47.16L374.69,42.20L376.41,42.06L378.93,36.38L378.64,34.51L382.38,29.33L384.90,28.18L388.78,23.00L391.22,18.12L398.27,18.19L402.94,20.42L405.17,17.04L412.07,15.82L419.12,17.33L426.23,16.97L428.46,18.19L428.82,21.49L433.85,20.63L437.02,21.28L442.62,18.76L445.64,14.81L446.58,9.71L448.16,7.91L447.66,3.02L454.63,3.38L462.54,7.62L467.35,6.97L470.66,7.98L474.83,4.31L476.41,4.24L481.52,0.00L489.71,1.58L488.06,7.91L486.40,10.42L486.76,14.16L491.72,18.40L492.37,20.92L489.28,20.34L487.91,24.73L488.42,27.68L482.74,30.34L480.15,30.48L476.12,37.74L477.06,41.12L479.86,44.28L479.21,47.23L481.23,55.93L478.57,56.43L478.14,65.35L473.61,64.92L475.62,67.36L476.48,73.40L474.40,77.14L472.24,77.78L471.31,83.54L474.47,84.76L477.06,87.63L482.16,86.55L480.01,90.44L481.01,95.97L479.72,97.48L478.78,104.31L480.44,105.89L477.85,112.00L476.20,119.98L473.97,123.79L468.72,128.97L462.18,131.77L452.76,130.91L451.97,128.83L447.44,128.32L443.77,129.62L441.04,132.56L437.52,132.13L434.50,129.90L435.15,128.11L432.20,126.96L430.69,123.51L433.13,121.92L432.77,119.05L430.26,118.91L425.59,114.02L423.36,114.81L421.34,118.55L415.88,120.70L409.34,121.78L401.57,120.27L400.93,117.83L397.69,115.81L399.49,112.79L396.97,107.40L393.95,103.88L384.03,105.61L379.58,104.02L381.52,98.63L376.41,95.25L376.92,90.51L375.41,88.14L371.16,87.49L370.66,84.90L371.88,76.71L371.38,73.26L373.03,72.18Z",
+          },
+          {
+            id: "rivne",
+            name: "Рівненська",
+            cx: 199.7,
+            cy: 75.1,
+            d: "M255.42,49.68L252.12,50.61L251.61,55.71L248.52,52.41L246.87,60.53L244.57,60.89L245.29,66.14L241.12,71.53L237.95,77.71L233.71,80.88L234.93,87.56L233.93,93.74L235.51,97.70L231.56,105.25L233.21,107.69L231.20,110.28L228.61,107.40L222.07,111.00L219.33,109.99L212.15,113.66L206.97,120.56L199.13,126.88L196.40,126.67L191.94,131.05L188.85,132.35L187.85,128.47L189.00,125.16L186.55,126.17L182.24,124.30L177.49,123.87L171.17,128.90L166.28,128.83L160.46,130.41L156.14,128.47L156.36,132.35L151.54,137.88L145.14,131.85L144.50,123.51L146.15,119.19L140.69,118.11L146.73,113.80L143.13,107.12L146.44,105.32L145.58,101.65L151.04,103.02L152.62,101.94L152.55,98.20L155.50,98.92L155.64,94.39L158.88,96.26L165.99,93.53L168.87,94.03L170.45,96.84L175.27,99.14L176.92,95.47L177.49,89.72L181.09,87.06L184.11,82.82L183.61,78.65L187.85,77.86L188.13,75.99L185.76,71.24L182.60,70.81L183.03,68.29L186.27,67.86L187.78,64.13L182.89,60.03L178.50,53.49L179.36,50.11L175.84,49.53L173.83,51.04L168.29,50.75L169.52,39.18L171.74,36.30L168.36,33.72L169.52,26.60L174.26,21.85L175.91,16.18L171.74,13.95L180.73,14.31L193.24,17.33L196.76,20.56L206.18,21.85L207.40,24.95L216.32,26.02L223.72,30.05L226.38,30.77L230.55,29.62L236.80,31.34L237.38,37.38L240.40,37.89L239.18,41.48L244.57,42.20L248.38,40.33L256.36,42.85L257.44,44.64L255.42,49.68Z",
+          },
+          {
+            id: "chernivtsi",
+            name: "Чернівецька",
+            cx: 166.8,
+            cy: 254.5,
+            d: "M234.29,246.72L230.33,250.10L227.03,248.59L222.57,252.33L219.41,252.91L213.08,250.10L213.22,252.55L209.20,252.84L205.10,249.67L202.08,251.25L202.08,256.00L197.62,253.27L194.53,257.65L180.51,259.59L179.29,265.20L173.54,273.40L171.38,274.19L162.18,274.04L154.71,275.55L132.85,275.77L130.84,276.92L125.88,283.53L120.92,286.05L116.96,286.34L120.06,279.15L118.83,271.09L119.26,266.78L122.28,261.39L129.26,256.86L129.54,253.70L132.35,252.04L137.16,247.01L144.28,243.78L150.25,244.86L151.97,235.80L150.82,229.83L154.27,226.38L159.09,229.90L161.03,227.60L165.63,233.42L169.08,231.41L172.46,231.41L171.67,235.08L175.70,237.52L185.62,239.89L189.64,238.89L193.38,244.50L195.32,242.34L199.78,242.41L195.90,239.25L196.83,237.88L200.57,239.97L201.65,236.52L205.60,236.01L205.32,238.67L207.69,240.04L210.49,237.74L217.68,239.75L219.26,238.39L223.58,239.46L223.22,236.30L226.95,237.74L229.18,236.01L231.99,238.03L234.29,246.72Z",
+          },
+          {
+            id: "ivano",
+            name: "Івано-Франківська",
+            cx: 110.2,
+            cy: 221.0,
+            two: true,
+            d: "M154.27,226.38L150.82,229.83L151.97,235.80L150.25,244.86L144.28,243.78L137.16,247.01L132.35,252.04L129.54,253.70L129.26,256.86L122.28,261.39L119.26,266.78L118.83,271.09L120.06,279.15L116.96,286.34L114.74,285.83L111.64,279.79L106.18,275.91L105.89,273.18L102.73,270.02L106.54,263.19L102.73,257.00L103.45,251.90L101.80,248.16L94.46,239.25L92.09,241.33L87.35,239.32L88.21,229.33L77.86,230.91L77.86,226.60L73.33,222.50L73.54,220.20L69.09,218.62L66.86,215.02L63.55,213.30L66.28,206.32L65.49,203.16L67.72,196.98L70.60,195.11L72.90,190.58L76.27,188.93L82.67,190.22L89.93,188.71L93.74,189.64L106.32,187.20L105.61,184.40L103.31,184.04L103.31,179.65L106.97,175.34L105.39,173.90L109.13,166.14L114.38,166.21L119.91,169.01L124.15,179.58L123.79,184.40L125.23,188.78L123.72,190.65L124.15,194.68L128.32,195.04L128.97,198.77L125.02,198.20L127.82,203.95L131.63,204.67L134.15,206.75L133.79,209.77L139.03,208.12L137.60,213.87L141.98,214.37L138.46,215.60L138.24,218.40L143.06,213.94L146.51,214.30L149.46,217.54L154.49,220.99L154.27,226.38Z",
+          },
+          {
+            id: "khmelnytskyi",
+            name: "Хмельницька",
+            cx: 214.8,
+            cy: 177.5,
+            d: "M229.18,236.01L226.95,237.74L223.22,236.30L223.58,239.46L219.26,238.39L217.68,239.75L210.49,237.74L207.69,240.04L205.32,238.67L205.60,236.01L201.65,236.52L200.57,239.97L196.83,237.88L195.90,239.25L199.78,242.41L195.32,242.34L193.38,244.50L189.64,238.89L185.62,239.89L185.47,236.01L182.89,233.86L183.53,231.41L180.30,228.39L182.02,220.05L180.30,217.68L181.02,214.45L179.87,210.64L181.52,207.69L180.80,204.88L182.46,202.51L181.59,196.19L183.82,192.02L184.18,181.74L183.03,180.44L181.45,173.61L184.32,170.52L186.77,164.48L185.04,161.18L186.62,157.22L184.90,153.77L184.25,144.79L188.06,141.84L186.48,140.40L187.56,136.30L190.29,134.79L188.85,132.35L191.94,131.05L196.40,126.67L199.13,126.88L206.97,120.56L212.15,113.66L219.33,109.99L222.07,111.00L228.61,107.40L231.20,110.28L235.51,114.81L231.99,119.98L238.82,126.88L241.98,131.99L247.08,130.69L248.31,136.09L246.87,141.91L248.45,145.07L243.42,146.37L244.50,150.32L242.70,152.41L244.64,153.63L247.23,160.39L255.85,163.55L250.46,168.87L252.76,170.74L249.02,178.43L250.03,182.38L248.95,184.11L252.55,185.04L251.61,187.85L254.06,195.18L253.05,196.91L254.06,202.73L248.59,205.39L242.34,202.08L240.11,204.38L237.24,203.88L232.35,210.49L230.76,216.03L232.27,226.52L230.98,227.46L229.18,236.01Z",
+          },
+          {
+            id: "lviv",
+            name: "Львівська",
+            cx: 87.4,
+            cy: 150.7,
+            d: "M140.69,118.11L146.15,119.19L144.50,123.51L145.14,131.85L151.54,137.88L153.70,141.98L151.90,146.15L144.93,149.03L138.82,149.53L138.67,154.56L135.08,155.57L131.13,161.32L121.28,164.99L119.91,169.01L114.38,166.21L109.13,166.14L105.39,173.90L106.97,175.34L103.31,179.65L103.31,184.04L105.61,184.40L106.32,187.20L93.74,189.64L89.93,188.71L82.67,190.22L76.27,188.93L72.90,190.58L70.60,195.11L67.72,196.98L65.49,203.16L66.28,206.32L63.55,213.30L54.06,210.35L48.81,206.97L46.30,201.29L42.13,201.79L37.67,195.90L38.60,192.23L37.24,190.65L37.31,185.91L31.78,179.51L30.62,179.87L34.08,172.75L34.29,166.71L32.93,163.05L32.21,155.64L39.40,146.51L41.62,145.72L55.57,130.26L71.67,116.68L77.64,113.15L82.10,109.27L83.46,106.61L86.34,105.53L93.89,106.40L96.26,105.75L98.13,100.14L102.59,97.48L103.31,91.66L105.75,91.30L108.77,95.54L114.38,94.89L116.25,98.56L118.98,99.14L120.27,101.58L116.53,104.46L118.11,107.98L120.34,106.40L128.83,113.80L134.65,113.94L135.73,112.65L140.98,115.53L140.69,118.11Z",
+          },
+          {
+            id: "ternopil",
+            name: "Тернопільська",
+            cx: 159.3,
+            cy: 179.5,
+            d: "M154.27,226.38L154.49,220.99L149.46,217.54L146.51,214.30L143.06,213.94L138.24,218.40L138.46,215.60L141.98,214.37L137.60,213.87L139.03,208.12L133.79,209.77L134.15,206.75L131.63,204.67L127.82,203.95L125.02,198.20L128.97,198.77L128.32,195.04L124.15,194.68L123.72,190.65L125.23,188.78L123.79,184.40L124.15,179.58L119.91,169.01L121.28,164.99L131.13,161.32L135.08,155.57L138.67,154.56L138.82,149.53L144.93,149.03L151.90,146.15L153.70,141.98L151.54,137.88L156.36,132.35L156.14,128.47L160.46,130.41L166.28,128.83L171.17,128.90L177.49,123.87L182.24,124.30L186.55,126.17L189.00,125.16L187.85,128.47L188.85,132.35L190.29,134.79L187.56,136.30L186.48,140.40L188.06,141.84L184.25,144.79L184.90,153.77L186.62,157.22L185.04,161.18L186.77,164.48L184.32,170.52L181.45,173.61L183.03,180.44L184.18,181.74L183.82,192.02L181.59,196.19L182.46,202.51L180.80,204.88L181.52,207.69L179.87,210.64L181.02,214.45L180.30,217.68L182.02,220.05L180.30,228.39L183.53,231.41L182.89,233.86L185.47,236.01L185.62,239.89L175.70,237.52L171.67,235.08L172.46,231.41L169.08,231.41L165.63,233.42L161.03,227.60L159.09,229.90L154.27,226.38Z",
+          },
+          {
+            id: "zakarpattia",
+            name: "Закарпатська",
+            cx: 49.7,
+            cy: 233.0,
+            d: "M63.55,213.30L66.86,215.02L69.09,218.62L73.54,220.20L73.33,222.50L77.86,226.60L77.86,230.91L88.21,229.33L87.35,239.32L92.09,241.33L94.46,239.25L101.80,248.16L103.45,251.90L102.73,257.00L106.54,263.19L102.73,270.02L96.62,268.36L87.49,271.02L76.85,265.42L72.25,266.71L68.37,262.76L59.02,260.38L55.14,262.18L50.04,260.10L45.07,253.77L40.26,252.33L37.09,257.51L35.01,258.73L31.63,256.93L28.40,260.38L26.74,258.01L28.47,254.99L27.46,251.90L24.15,248.52L17.61,248.67L16.39,243.42L13.73,238.74L8.27,237.95L6.61,234.29L6.04,226.95L0.00,225.95L1.51,216.53L2.59,214.30L11.00,207.83L13.73,201.94L14.02,198.70L16.53,196.11L18.91,190.87L22.21,189.93L23.72,184.83L25.59,184.47L27.89,187.34L32.78,187.92L36.59,191.80L37.24,190.65L38.60,192.23L37.67,195.90L42.13,201.79L46.30,201.29L48.81,206.97L54.06,210.35L63.55,213.30Z",
+          },
+          {
+            id: "volyn",
+            name: "Волинська",
+            cx: 138.2,
+            cy: 59.3,
+            d: "M140.69,118.11L140.98,115.53L135.73,112.65L134.65,113.94L128.83,113.80L120.34,106.40L118.11,107.98L116.53,104.46L120.27,101.58L118.98,99.14L116.25,98.56L114.38,94.89L108.77,95.54L105.75,91.30L103.31,91.66L102.80,86.12L98.92,81.45L99.14,78.22L105.89,78.14L106.11,76.20L100.43,70.95L98.20,66.07L97.70,57.44L92.95,51.47L89.50,42.92L92.67,38.96L90.08,32.49L90.94,29.69L90.15,25.31L91.80,23.94L96.84,23.58L102.08,25.88L105.75,28.54L112.51,23.80L117.47,21.21L120.34,15.60L124.73,11.36L134.86,11.79L138.10,12.80L149.67,12.22L157.29,10.42L163.91,13.01L171.74,13.95L175.91,16.18L174.26,21.85L169.52,26.60L168.36,33.72L171.74,36.30L169.52,39.18L168.29,50.75L173.83,51.04L175.84,49.53L179.36,50.11L178.50,53.49L182.89,60.03L187.78,64.13L186.27,67.86L183.03,68.29L182.60,70.81L185.76,71.24L188.13,75.99L187.85,77.86L183.61,78.65L184.11,82.82L181.09,87.06L177.49,89.72L176.92,95.47L175.27,99.14L170.45,96.84L168.87,94.03L165.99,93.53L158.88,96.26L155.64,94.39L155.50,98.92L152.55,98.20L152.62,101.94L151.04,103.02L145.58,101.65L146.44,105.32L143.13,107.12L146.73,113.80L140.69,118.11Z",
+          },
+          {
+            id: "cherkasy",
+            name: "Черкаська",
+            cx: 403.3,
+            cy: 203.0,
+            d: "M434.50,139.39L440.83,145.43L442.19,150.97L445.28,151.76L448.66,156.79L448.59,161.82L446.65,162.90L449.31,167.79L455.28,171.10L455.92,174.91L460.52,176.78L462.75,181.38L463.11,184.90L459.73,189.14L464.55,198.92L464.55,203.59L462.97,208.41L464.55,211.14L465.05,215.88L466.92,220.70L464.19,223.14L459.95,221.64L457.79,224.29L452.69,225.23L450.03,217.03L446.15,217.32L444.85,214.73L440.97,217.18L436.94,221.85L436.22,226.09L431.77,225.23L425.87,229.47L422.21,225.37L417.03,223.94L415.38,225.66L410.78,225.16L409.91,230.98L407.04,235.73L401.36,238.10L400.35,236.80L394.74,236.16L389.28,237.52L384.32,235.51L378.86,235.73L374.11,234.65L370.23,237.38L369.51,241.12L366.78,243.99L368.15,247.59L364.19,248.23L361.24,246.94L359.81,249.60L354.06,252.33L350.60,251.97L346.22,254.06L341.26,252.48L344.06,248.52L341.62,240.97L337.45,237.74L338.74,235.29L333.85,232.92L331.70,223.07L328.46,220.84L330.26,218.47L327.02,215.96L331.91,209.27L331.91,202.80L335.22,206.61L339.25,206.25L341.55,201.94L346.72,199.64L349.81,200.36L351.40,196.91L352.47,200.00L359.95,201.87L361.68,203.23L363.54,196.33L366.28,197.77L370.30,197.55L371.74,195.68L376.41,198.27L382.38,195.83L384.03,196.83L385.83,192.66L391.58,187.56L395.03,183.39L393.95,179.51L395.89,176.06L397.05,170.52L396.40,166.21L397.84,163.91L403.16,161.25L407.18,160.74L409.05,164.12L413.08,163.69L418.83,164.84L423.14,157.44L423.14,154.99L426.09,152.91L425.08,148.67L427.89,145.29L431.34,143.20L431.77,138.67L434.50,139.39Z",
+          },
+          {
+            id: "kirovohrad",
+            name: "Кіровоградська",
+            cx: 433.4,
+            cy: 255.2,
+            two: true,
+            d: "M346.22,254.06L350.60,251.97L354.06,252.33L359.81,249.60L361.24,246.94L364.19,248.23L368.15,247.59L366.78,243.99L369.51,241.12L370.23,237.38L374.11,234.65L378.86,235.73L384.32,235.51L389.28,237.52L394.74,236.16L400.35,236.80L401.36,238.10L407.04,235.73L409.91,230.98L410.78,225.16L415.38,225.66L417.03,223.94L422.21,225.37L425.87,229.47L431.77,225.23L436.22,226.09L436.94,221.85L440.97,217.18L444.85,214.73L446.15,217.32L450.03,217.03L452.69,225.23L457.79,224.29L459.95,221.64L464.19,223.14L466.92,220.70L465.05,215.88L464.55,211.14L462.97,208.41L464.55,203.59L475.26,208.84L479.72,212.22L482.38,216.10L486.40,216.46L488.49,218.62L486.48,221.06L489.78,224.58L493.31,224.51L497.04,227.03L499.34,225.73L502.72,229.18L503.59,226.81L507.18,225.66L513.36,229.33L509.34,236.30L506.96,233.42L502.08,233.35L497.76,235.58L499.78,238.96L506.39,240.40L509.19,242.27L504.95,245.72L493.16,251.61L494.74,257.15L496.18,270.30L490.93,274.91L489.21,274.19L485.68,279.22L484.03,275.05L483.38,280.30L480.15,280.94L476.12,284.61L475.12,288.49L472.67,283.46L468.50,284.39L465.56,288.49L463.83,286.98L459.66,289.21L461.03,292.01L458.65,292.95L459.52,296.47L457.72,299.35L450.10,300.50L442.69,297.91L439.82,297.84L435.58,302.58L430.47,298.48L423.64,299.35L422.42,295.97L423.64,293.74L421.70,289.50L419.91,289.43L416.89,284.68L419.55,282.74L419.19,279.79L412.93,277.92L407.76,281.23L407.76,277.85L404.02,278.50L396.90,277.49L394.10,271.74L386.33,271.31L382.09,274.69L379.00,273.11L373.03,272.89L369.58,275.05L364.12,273.75L357.36,273.54L354.92,275.26L345.79,274.40L342.12,269.23L338.96,269.08L337.45,271.38L332.42,270.02L333.06,266.93L330.98,265.56L332.92,260.53L336.66,256.14L339.03,255.28L340.11,259.02L346.22,254.06Z",
+          },
+          {
+            id: "kyiv_obl",
+            name: "Київська",
+            cx: 366.5,
+            cy: 134.8,
+            d: "M434.50,139.39L431.77,138.67L431.34,143.20L427.89,145.29L425.08,148.67L426.09,152.91L423.14,154.99L423.14,157.44L418.83,164.84L413.08,163.69L409.05,164.12L407.18,160.74L403.16,161.25L397.84,163.91L396.40,166.21L397.05,170.52L395.89,176.06L393.95,179.51L395.03,183.39L391.58,187.56L385.83,192.66L384.03,196.83L382.38,195.83L376.41,198.27L371.74,195.68L370.30,197.55L366.28,197.77L363.54,196.33L361.68,203.23L359.95,201.87L352.47,200.00L351.40,196.91L349.81,200.36L346.72,199.64L341.55,201.94L339.25,206.25L335.22,206.61L331.91,202.80L329.83,201.65L327.53,197.41L325.08,196.55L323.86,193.31L326.59,190.36L326.02,184.97L327.02,182.31L324.36,179.80L325.30,175.84L322.50,174.55L324.15,170.95L321.49,170.74L322.50,165.35L330.91,160.96L335.51,155.71L333.28,151.54L333.21,146.22L336.08,144.28L334.57,140.69L334.86,135.30L331.55,131.13L330.40,126.31L328.61,124.08L325.01,124.73L327.31,119.05L328.10,114.66L326.74,112.87L331.84,105.39L331.12,101.51L327.74,100.14L328.75,95.54L324.65,87.42L327.24,88.21L328.39,81.52L323.07,76.49L321.56,78.22L320.20,70.31L325.08,66.50L325.59,62.83L324.08,61.32L328.75,61.03L330.48,57.66L335.22,54.71L338.60,55.00L340.04,57.94L344.42,58.59L351.18,55.64L356.93,55.71L359.23,57.01L364.12,62.26L364.98,67.79L373.03,72.18L371.38,73.26L371.88,76.71L370.66,84.90L371.16,87.49L375.41,88.14L376.92,90.51L376.41,95.25L381.52,98.63L379.58,104.02L384.03,105.61L393.95,103.88L396.97,107.40L399.49,112.79L397.69,115.81L400.93,117.83L401.57,120.27L409.34,121.78L415.88,120.70L421.34,118.55L423.36,114.81L425.59,114.02L430.26,118.91L432.77,119.05L433.13,121.92L430.69,123.51L432.20,126.96L435.15,128.11L434.50,129.90L437.52,132.13L435.51,136.30L434.50,139.39ZM383.60,115.67L383.39,112.08L379.43,110.06L378.50,112.94L375.41,116.03L371.45,115.53L371.24,117.61L368.29,114.45L366.71,109.99L362.54,109.85L359.81,111.64L359.23,116.03L357.43,117.54L355.71,127.68L358.01,125.95L361.32,126.45L361.82,129.11L365.05,133.43L367.50,140.40L369.30,141.05L370.01,147.16L371.67,152.69L374.33,151.47L373.39,145.65L374.83,143.49L373.03,136.09L377.78,136.59L378.14,133.50L380.94,134.72L380.94,132.06L383.31,130.77L379.86,125.02L379.58,120.63L383.60,115.67Z",
+          },
+          {
+            id: "mykolaiv",
+            name: "Миколаївська",
+            cx: 419.6,
+            cy: 321.7,
+            d: "M354.92,275.26L357.36,273.54L364.12,273.75L369.58,275.05L373.03,272.89L379.00,273.11L382.09,274.69L386.33,271.31L394.10,271.74L396.90,277.49L404.02,278.50L407.76,277.85L407.76,281.23L412.93,277.92L419.19,279.79L419.55,282.74L416.89,284.68L419.91,289.43L421.70,289.50L423.64,293.74L422.42,295.97L423.64,299.35L430.47,298.48L435.58,302.58L439.82,297.84L442.69,297.91L450.10,300.50L457.72,299.35L459.52,296.47L458.65,292.95L461.03,292.01L459.66,289.21L463.83,286.98L465.56,288.49L468.50,284.39L472.67,283.46L475.12,288.49L474.97,291.15L477.20,293.38L476.27,301.00L477.27,304.02L472.89,305.24L474.25,308.33L473.82,313.01L477.56,313.58L478.71,317.03L479.14,324.51L476.48,322.35L474.76,325.01L477.99,326.74L479.14,330.33L478.28,333.93L479.65,336.66L475.76,339.82L472.53,339.53L469.80,345.00L470.23,346.79L476.34,350.75L474.69,353.70L472.46,351.75L471.52,354.63L474.25,355.71L464.98,359.95L470.95,360.81L465.63,363.11L460.24,363.11L459.01,361.68L452.90,360.02L452.62,362.11L446.15,362.18L444.78,364.62L438.67,364.34L436.30,368.15L431.84,368.07L426.95,369.66L425.73,364.48L428.82,358.30L428.53,355.35L426.02,353.55L427.74,350.82L423.50,350.39L423.64,343.63L420.77,338.46L420.62,343.34L423.28,345.28L421.49,350.82L426.45,351.47L424.22,355.06L427.31,355.56L426.23,360.67L424.08,361.68L422.57,365.77L424.36,368.58L424.36,373.54L422.13,375.69L418.18,375.69L413.80,373.97L409.48,376.27L405.10,374.26L411.49,363.40L406.97,367.64L403.52,364.12L406.32,369.44L402.72,374.76L398.55,377.06L391.87,375.12L391.01,362.25L386.33,357.43L385.61,353.70L393.59,352.55L395.75,350.75L397.76,344.28L394.24,339.96L389.50,338.81L392.08,335.08L391.15,332.92L386.19,334.21L380.65,332.42L377.35,322.28L379.07,314.88L375.69,312.07L375.33,308.84L371.45,311.71L370.23,309.20L366.85,308.41L361.82,309.20L359.45,307.40L358.58,297.91L355.49,294.89L354.70,287.77L351.25,284.11L351.68,279.22L355.85,277.49L354.92,275.26ZM420.05,385.18L416.02,383.96L413.15,385.83L406.97,379.65L409.48,380.94L417.39,380.51L421.70,382.67L420.05,385.18L420.05,385.18Z",
+          },
+          {
+            id: "vinnytsia",
+            name: "Вінницька",
+            cx: 287.5,
+            cy: 221.8,
+            d: "M346.22,254.06L340.11,259.02L339.03,255.28L336.66,256.14L332.92,260.53L330.98,265.56L333.06,266.93L332.42,270.02L327.53,272.03L327.89,277.06L319.91,276.70L317.25,275.26L312.93,276.77L308.91,276.70L302.80,272.53L299.99,273.40L300.07,276.34L291.73,281.38L289.35,273.90L279.65,270.52L277.21,270.81L275.62,276.20L271.60,269.15L269.73,271.60L268.65,269.37L270.95,265.06L267.72,264.48L263.47,265.85L262.76,262.68L258.30,263.33L259.38,260.81L257.65,258.23L252.04,256.72L249.67,252.62L244.93,248.81L239.54,248.52L238.67,246.29L234.29,246.72L231.99,238.03L229.18,236.01L230.98,227.46L232.27,226.52L230.76,216.03L232.35,210.49L237.24,203.88L240.11,204.38L242.34,202.08L248.59,205.39L254.06,202.73L253.05,196.91L254.06,195.18L251.61,187.85L252.55,185.04L248.95,184.11L250.03,182.38L249.02,178.43L252.76,170.74L250.46,168.87L255.85,163.55L262.54,163.98L272.89,162.76L278.07,163.84L279.87,161.97L285.76,163.69L291.73,163.55L297.33,158.08L300.43,158.88L301.50,164.48L303.95,168.36L301.72,170.88L303.37,177.57L314.66,178.43L322.50,174.55L325.30,175.84L324.36,179.80L327.02,182.31L326.02,184.97L326.59,190.36L323.86,193.31L325.08,196.55L327.53,197.41L329.83,201.65L331.91,202.80L331.91,209.27L327.02,215.96L330.26,218.47L328.46,220.84L331.70,223.07L333.85,232.92L338.74,235.29L337.45,237.74L341.62,240.97L344.06,248.52L341.26,252.48L346.22,254.06Z",
+          },
+        ];
+        const MAP_W = 780.0,
+          MAP_H = 522.85;
 
-<div class="toast" id="toast"></div>
+        /* ---------------- стан ---------------- */
+        const KEY = "ua-region-map-v1";
+        const NS = "http://www.w3.org/2000/svg";
+        let state = {};
+        let brush = "been";
 
-<script>
-(function(){
-"use strict";
+        REGIONS.forEach((r) => (state[r.id] = "none"));
 
-/* ---------------- статуси ---------------- */
-const STATUSES = [
-  {id:"home",    label:"Народився / живу", short:"Дім"},
-  {id:"been",    label:"Був",              short:"Був"},
-  {id:"transit", label:"Проїздом",         short:"Проїздом"},
-  {id:"none",    label:"Не був",           short:"Не був"}
-];
-const SORDER = ["home","been","transit","none"];
-const COLORS = {home:"#2F5FA8", been:"#4C8F5E", transit:"#D9A72C", none:"#BE4F45"};
+        /* ---------------- сховище ---------------- */
+        async function save() {
+          const val = JSON.stringify(state);
+          try {
+            if (window.storage && window.storage.set)
+              await window.storage.set(KEY, val, false);
+          } catch (e) {}
+          try {
+            localStorage.setItem(KEY, val);
+          } catch (e) {}
+        }
+        async function load() {
+          let raw = null;
+          try {
+            if (window.storage && window.storage.get) {
+              const r = await window.storage.get(KEY, false);
+              if (r && r.value) raw = r.value;
+            }
+          } catch (e) {}
+          if (!raw) {
+            try {
+              raw = localStorage.getItem(KEY);
+            } catch (e) {}
+          }
+          if (raw) apply(JSON.parse(raw));
+        }
+        function apply(obj) {
+          if (!obj) return;
+          const src = obj.regions || obj;
+          REGIONS.forEach((r) => {
+            const v = src[r.id];
+            if (SORDER.indexOf(v) > -1) state[r.id] = v;
+          });
+        }
+        function fromHash() {
+          const m = location.hash.match(/s=([0-3]+)/);
+          if (!m || m[1].length !== REGIONS.length) return false;
+          REGIONS.forEach((r, i) => (state[r.id] = SORDER[+m[1][i]]));
+          return true;
+        }
+        function toCode() {
+          return REGIONS.map((r) => SORDER.indexOf(state[r.id])).join("");
+        }
 
-/* ---------------- географія (точні контури, проєкція вбудована) ---------------- */
-const REGIONS = [
-  {id:"odesa", name:"Одеська", cx:331.8, cy:366.9, d:"M326.88,439.60L339.68,428.39L342.05,427.24L331.70,436.37L326.88,439.60ZM391.87,375.12L382.95,376.70L377.28,379.58L374.33,379.14L372.10,382.02L373.97,386.62L368.65,394.74L367.00,398.70L359.45,410.20L353.62,415.38L348.38,421.92L342.62,426.66L342.62,422.13L340.61,426.95L335.94,424.65L334.00,429.54L332.49,427.60L332.92,432.63L331.41,430.76L327.02,431.48L329.68,435.87L323.50,439.46L321.42,433.92L322.14,428.39L319.91,425.30L317.75,434.14L316.74,442.77L321.56,442.77L317.25,447.51L319.33,450.46L323.07,448.52L323.79,458.65L321.35,464.98L319.05,465.34L319.76,461.67L318.97,456.86L315.38,453.48L304.09,449.74L299.71,450.89L297.12,453.05L287.34,457.07L285.47,459.66L279.15,456.57L278.36,462.46L269.08,460.88L257.94,455.28L255.49,447.44L252.48,445.86L255.93,442.12L265.56,443.99L268.44,439.03L265.85,433.78L270.02,430.11L270.88,427.24L275.19,426.45L275.34,424.15L278.57,422.64L278.50,416.02L279.87,414.59L289.14,412.43L289.00,405.67L292.37,400.71L288.92,395.54L289.64,392.59L288.78,385.97L290.15,382.74L300.21,377.78L302.08,380.22L301.36,389.71L305.24,387.27L307.11,382.67L308.84,386.19L313.37,381.88L314.23,385.83L316.96,386.76L319.40,390.14L324.94,383.31L330.62,392.01L333.93,390.07L341.33,390.29L343.70,387.20L341.26,387.12L337.74,382.02L334.21,380.51L333.49,378.28L335.87,376.70L335.15,373.97L336.37,365.92L335.51,361.53L331.84,358.44L327.82,358.01L325.30,354.85L319.26,351.90L321.56,345.43L319.33,342.48L317.54,343.99L316.31,340.54L319.55,337.88L319.48,332.99L321.20,329.83L320.27,327.17L316.96,326.09L313.58,329.76L311.57,324.87L309.05,323.07L306.25,318.47L303.16,318.76L301.43,312.50L304.52,307.47L305.53,300.64L307.47,298.20L304.88,295.90L307.76,290.72L305.60,289.71L303.16,283.53L300.35,283.82L298.34,286.26L295.39,285.83L291.73,281.38L300.07,276.34L299.99,273.40L302.80,272.53L308.91,276.70L312.93,276.77L317.25,275.26L319.91,276.70L327.89,277.06L327.53,272.03L332.42,270.02L337.45,271.38L338.96,269.08L342.12,269.23L345.79,274.40L354.92,275.26L355.85,277.49L351.68,279.22L351.25,284.11L354.70,287.77L355.49,294.89L358.58,297.91L359.45,307.40L361.82,309.20L366.85,308.41L370.23,309.20L371.45,311.71L375.33,308.84L375.69,312.07L379.07,314.88L377.35,322.28L380.65,332.42L386.19,334.21L391.15,332.92L392.08,335.08L389.50,338.81L394.24,339.96L397.76,344.28L395.75,350.75L393.59,352.55L385.61,353.70L386.33,357.43L391.01,362.25L391.87,375.12ZM343.49,390.36L343.13,394.89L346.08,398.48L351.04,400.50L353.84,403.80L356.21,409.34L359.88,406.10L356.36,402.58L355.49,397.91L352.83,396.25L351.68,390.65L350.82,394.82L347.08,389.07L343.49,390.36Z"},
-  {id:"kherson", name:"Херсонська", cx:499.4, cy:371.8, d:"M457.14,413.29L463.69,414.23L472.60,413.72L475.40,416.46L457.14,413.29ZM435.07,406.82L416.24,402.29L410.85,399.71L431.34,405.02L435.07,406.82ZM577.13,399.06L572.02,407.47L564.76,411.28L566.63,406.75L573.68,403.87L576.48,398.70L576.55,398.77L577.13,399.06ZM569.15,396.69L565.84,399.56L561.53,400.78L560.09,399.49L555.99,405.38L556.71,411.21L559.23,421.06L565.41,433.85L564.26,434.57L559.80,425.80L556.71,428.53L558.08,421.99L556.86,421.13L555.49,414.37L553.62,415.59L549.24,410.70L553.12,409.34L554.20,407.04L550.82,404.59L547.29,405.89L548.01,410.99L545.50,416.74L541.33,418.76L537.95,416.31L539.60,409.55L542.98,408.19L544.35,410.99L545.14,406.10L543.84,404.31L541.18,407.11L533.20,402.72L533.64,409.34L529.82,401.43L527.24,398.55L525.73,401.50L528.24,404.81L526.45,406.82L524.72,403.16L522.64,404.88L525.44,408.76L520.91,407.97L518.25,403.80L514.22,401.86L507.90,401.00L504.02,402.94L504.16,405.82L502.22,408.98L500.71,406.97L497.83,409.19L498.98,411.42L497.12,414.15L492.95,413.72L489.93,410.42L486.84,410.99L486.98,408.33L483.38,408.84L484.32,402.58L481.59,407.18L479.21,408.33L474.69,406.10L474.40,408.91L469.65,409.70L464.05,408.40L454.84,410.34L450.96,412.21L440.04,408.69L440.39,403.66L433.42,402.94L430.47,399.56L429.04,400.14L423.07,395.97L422.85,398.63L417.89,396.97L419.98,394.03L426.81,393.95L431.12,391.22L428.68,387.56L420.05,385.18L420.05,385.18L421.70,382.67L429.90,383.82L433.42,383.46L440.83,386.26L444.71,386.55L446.86,383.24L452.11,378.35L454.27,378.14L457.65,374.69L446.94,379.86L443.63,380.29L439.89,377.49L435.07,380.37L433.78,377.28L429.54,375.77L426.95,369.66L431.84,368.07L436.30,368.15L438.67,364.34L444.78,364.62L446.15,362.18L452.62,362.11L452.90,360.02L459.01,361.68L460.24,363.11L465.63,363.11L470.95,360.81L464.98,359.95L474.25,355.71L471.52,354.63L472.46,351.75L474.69,353.70L476.34,350.75L470.23,346.79L469.80,345.00L472.53,339.53L475.76,339.82L479.65,336.66L478.28,333.93L479.14,330.33L477.99,326.74L474.76,325.01L476.48,322.35L479.14,324.51L478.71,317.03L477.56,313.58L486.62,316.67L488.42,319.26L494.74,316.96L498.55,314.01L499.56,317.97L502.65,319.76L513.58,317.82L520.55,319.98L527.02,320.05L531.48,333.49L535.72,333.21L537.23,330.69L540.25,330.33L539.39,333.49L541.11,343.70L542.48,344.57L543.77,350.75L545.50,353.26L550.67,355.56L554.34,361.89L549.52,369.01L547.01,371.09L551.68,373.03L551.32,376.92L553.05,380.29L557.50,380.80L557.43,383.53L560.59,383.46L565.70,386.19L567.06,395.97L569.15,396.69Z"},
-  {id:"kyiv_city", name:"м. Київ", cx:370.3, cy:125.9, lx:430.3, ly:107.9, d:"M383.60,115.67L379.58,120.63L379.86,125.02L383.31,130.77L380.94,132.06L380.94,134.72L378.14,133.50L377.78,136.59L373.03,136.09L374.83,143.49L373.39,145.65L374.33,151.47L371.67,152.69L370.01,147.16L369.30,141.05L367.50,140.40L365.05,133.43L361.82,129.11L361.32,126.45L358.01,125.95L355.71,127.68L357.43,117.54L359.23,116.03L359.81,111.64L362.54,109.85L366.71,109.99L368.29,114.45L371.24,117.61L371.45,115.53L375.41,116.03L378.50,112.94L379.43,110.06L383.39,112.08L383.60,115.67Z"},
-  {id:"zhytomyr", name:"Житомирська", cx:284.9, cy:108.5, d:"M255.42,49.68L257.29,51.54L260.53,48.67L261.96,42.77L263.69,41.98L266.85,45.43L272.32,46.37L278.36,40.62L282.17,45.94L283.39,49.24L289.43,46.58L294.03,48.02L294.82,53.99L297.69,55.57L298.56,58.30L299.85,52.98L304.67,48.31L308.41,48.24L312.22,44.36L315.52,44.57L319.33,51.76L318.97,55.14L321.71,61.39L324.08,61.32L325.59,62.83L325.08,66.50L320.20,70.31L321.56,78.22L323.07,76.49L328.39,81.52L327.24,88.21L324.65,87.42L328.75,95.54L327.74,100.14L331.12,101.51L331.84,105.39L326.74,112.87L328.10,114.66L327.31,119.05L325.01,124.73L328.61,124.08L330.40,126.31L331.55,131.13L334.86,135.30L334.57,140.69L336.08,144.28L333.21,146.22L333.28,151.54L335.51,155.71L330.91,160.96L322.50,165.35L321.49,170.74L324.15,170.95L322.50,174.55L314.66,178.43L303.37,177.57L301.72,170.88L303.95,168.36L301.50,164.48L300.43,158.88L297.33,158.08L291.73,163.55L285.76,163.69L279.87,161.97L278.07,163.84L272.89,162.76L262.54,163.98L255.85,163.55L247.23,160.39L244.64,153.63L242.70,152.41L244.50,150.32L243.42,146.37L248.45,145.07L246.87,141.91L248.31,136.09L247.08,130.69L241.98,131.99L238.82,126.88L231.99,119.98L235.51,114.81L231.20,110.28L233.21,107.69L231.56,105.25L235.51,97.70L233.93,93.74L234.93,87.56L233.71,80.88L237.95,77.71L241.12,71.53L245.29,66.14L244.57,60.89L246.87,60.53L248.52,52.41L251.61,55.71L252.12,50.61L255.42,49.68Z"},
-  {id:"sumy", name:"Сумська", cx:519.4, cy:83.2, d:"M489.71,1.58L492.87,0.65L494.96,5.18L501.21,0.72L505.89,0.79L512.14,9.20L516.17,12.72L516.81,21.85L517.96,27.03L520.05,27.03L523.50,30.70L529.90,35.59L531.12,40.91L529.61,42.77L519.54,44.79L517.60,47.23L520.12,48.67L523.64,55.57L523.57,61.32L522.20,63.48L526.95,65.13L526.30,69.52L522.35,73.04L526.37,74.41L531.55,72.61L540.39,74.26L541.26,77.14L545.64,78.07L554.34,74.55L558.36,74.62L560.02,76.49L561.24,82.46L563.33,85.76L570.51,85.76L567.78,88.78L568.57,92.31L570.59,93.67L572.38,101.44L574.97,103.66L576.41,109.70L572.74,112.94L575.91,122.36L579.14,123.36L581.30,128.75L586.47,130.69L585.90,132.13L578.28,132.64L574.40,131.77L573.53,134.51L571.31,133.79L568.36,137.81L563.33,137.88L558.44,142.84L556.86,141.55L553.91,144.64L549.95,143.85L545.35,144.57L543.92,146.87L538.31,146.44L535.72,147.59L534.93,145.00L536.87,143.13L533.49,136.88L531.62,137.45L531.41,132.28L526.23,126.24L525.66,119.77L524.22,119.34L517.39,124.08L511.71,120.27L507.32,122.28L508.76,123.43L503.73,124.80L500.57,123.36L487.77,120.77L485.47,119.48L482.23,121.28L476.20,119.98L477.85,112.00L480.44,105.89L478.78,104.31L479.72,97.48L481.01,95.97L480.01,90.44L482.16,86.55L477.06,87.63L474.47,84.76L471.31,83.54L472.24,77.78L474.40,77.14L476.48,73.40L475.62,67.36L473.61,64.92L478.14,65.35L478.57,56.43L481.23,55.93L479.21,47.23L479.86,44.28L477.06,41.12L476.12,37.74L480.15,30.48L482.74,30.34L488.42,27.68L487.91,24.73L489.28,20.34L492.37,20.92L491.72,18.40L486.76,14.16L486.40,10.42L488.06,7.91L489.71,1.58Z"},
-  {id:"donetsk", name:"Донецька", cx:678.6, cy:277.4, d:"M739.60,285.26L732.62,285.47L730.61,286.48L728.31,291.08L727.23,297.98L724.65,297.69L719.83,301.86L710.63,303.80L708.18,306.90L707.03,311.57L707.39,318.11L705.24,322.14L705.31,325.01L709.40,324.94L709.26,327.96L705.88,331.41L706.82,337.23L702.29,342.55L703.08,339.32L700.35,337.88L698.41,339.17L690.93,338.38L686.26,340.40L678.49,339.82L674.32,343.63L668.21,354.06L664.69,350.96L654.91,355.21L653.47,352.76L655.70,349.60L658.00,349.17L658.00,345.07L653.04,342.84L650.89,338.38L646.14,335.51L649.45,333.21L648.95,327.38L654.98,327.31L656.06,323.21L658.94,324.15L661.09,316.89L657.21,317.39L650.38,311.07L646.21,311.35L641.76,307.69L640.03,308.41L634.64,296.26L631.76,296.26L631.26,292.81L629.25,288.92L633.56,287.63L630.90,284.54L631.12,277.42L634.42,276.70L641.83,280.01L644.49,277.49L643.27,271.02L645.57,268.65L644.27,262.61L640.68,261.53L639.67,255.06L642.91,246.72L642.48,244.21L639.38,244.42L638.31,247.37L636.58,245.36L638.23,243.20L635.36,241.33L633.35,231.48L639.24,231.48L642.48,229.61L647.44,231.92L646.65,229.69L651.10,226.45L654.41,226.81L655.85,222.43L659.80,220.27L658.65,216.89L661.89,211.93L671.30,205.32L670.51,203.23L666.92,202.80L668.64,200.00L672.74,199.71L678.35,200.93L681.51,198.92L685.39,200.79L683.88,203.73L687.05,205.10L691.43,203.73L690.50,208.98L692.37,213.22L689.71,216.60L698.48,218.04L699.63,222.28L701.64,223.22L703.51,231.12L701.28,234.93L702.65,243.20L704.80,244.14L704.59,248.16L709.19,249.31L712.78,254.27L710.20,256.43L712.35,259.95L716.67,259.16L720.26,266.35L728.60,269.30L728.24,272.96L731.12,275.12L738.45,275.48L740.17,281.23L739.60,285.26Z"},
-  {id:"dnipro", name:"Дніпропетровська", cx:553.9, cy:265.6, two:true, d:"M635.36,241.33L638.23,243.20L636.58,245.36L638.31,247.37L639.38,244.42L642.48,244.21L642.91,246.72L639.67,255.06L640.68,261.53L644.27,262.61L645.57,268.65L643.27,271.02L644.49,277.49L641.83,280.01L634.42,276.70L631.12,277.42L630.90,284.54L633.56,287.63L629.25,288.92L631.26,292.81L619.54,295.32L615.30,294.24L614.80,292.30L610.56,294.32L610.70,287.41L608.18,286.77L606.46,282.96L604.16,281.66L602.72,277.78L596.90,279.65L590.86,275.91L585.32,278.86L576.27,277.92L572.02,276.27L562.53,277.28L558.87,279.87L554.34,277.64L553.33,284.54L557.86,289.00L553.76,291.44L553.76,294.03L557.57,296.54L556.93,300.93L559.52,302.29L557.79,312.00L558.58,315.95L554.91,316.39L543.77,313.87L537.73,316.89L527.02,320.05L520.55,319.98L513.58,317.82L502.65,319.76L499.56,317.97L498.55,314.01L494.74,316.96L488.42,319.26L486.62,316.67L477.56,313.58L473.82,313.01L474.25,308.33L472.89,305.24L477.27,304.02L476.27,301.00L477.20,293.38L474.97,291.15L475.12,288.49L476.12,284.61L480.15,280.94L483.38,280.30L484.03,275.05L485.68,279.22L489.21,274.19L490.93,274.91L496.18,270.30L494.74,257.15L493.16,251.61L504.95,245.72L509.19,242.27L506.39,240.40L499.78,238.96L497.76,235.58L502.08,233.35L506.96,233.42L509.34,236.30L513.36,229.33L518.61,233.07L523.93,234.50L527.24,236.95L529.68,234.43L530.47,230.76L528.75,227.60L529.75,222.64L535.14,215.31L542.84,211.71L547.80,210.35L550.24,208.41L556.28,207.69L558.80,208.91L565.91,209.41L575.33,217.75L579.50,220.56L585.11,220.56L593.73,222.86L599.99,219.91L604.09,224.73L601.64,227.46L606.46,229.26L610.92,233.78L609.33,236.08L615.59,240.83L617.17,245.50L615.95,247.95L618.97,248.31L623.57,241.05L628.96,243.06L635.36,241.33Z"},
-  {id:"kharkiv", name:"Харківська", cx:622.2, cy:177.7, d:"M681.51,198.92L678.35,200.93L672.74,199.71L668.64,200.00L666.92,202.80L670.51,203.23L671.30,205.32L661.89,211.93L658.65,216.89L659.80,220.27L655.85,222.43L654.41,226.81L651.10,226.45L646.65,229.69L647.44,231.92L642.48,229.61L639.24,231.48L633.35,231.48L635.36,241.33L628.96,243.06L623.57,241.05L618.97,248.31L615.95,247.95L617.17,245.50L615.59,240.83L609.33,236.08L610.92,233.78L606.46,229.26L601.64,227.46L604.09,224.73L599.99,219.91L593.73,222.86L585.11,220.56L579.50,220.56L575.33,217.75L565.91,209.41L558.80,208.91L557.43,204.02L560.31,198.85L567.35,200.28L570.51,198.92L574.54,193.53L572.38,188.64L578.93,186.27L575.76,183.75L579.07,182.31L576.55,177.35L576.48,174.19L573.96,175.41L568.72,173.18L566.56,168.65L566.49,164.91L562.68,163.98L558.65,161.39L553.48,159.67L551.39,154.27L554.27,150.61L553.91,144.64L556.86,141.55L558.44,142.84L563.33,137.88L568.36,137.81L571.31,133.79L573.53,134.51L574.40,131.77L578.28,132.64L585.90,132.13L586.47,130.69L592.37,125.23L603.58,124.94L606.39,127.32L610.84,133.79L615.73,131.92L622.13,134.22L621.99,136.73L624.72,138.24L628.24,134.36L637.73,128.75L643.48,128.68L649.45,126.53L652.97,122.86L659.23,121.85L661.45,127.32L666.63,130.26L666.49,135.22L672.88,143.78L681.15,148.24L686.11,154.06L688.70,157.87L685.68,159.52L687.48,161.75L683.88,167.00L686.04,167.29L686.26,170.67L684.10,174.76L685.25,179.72L681.44,186.70L682.81,193.45L684.67,195.25L681.51,198.92Z"},
-  {id:"luhansk", name:"Луганська", cx:732.9, cy:212.4, d:"M739.60,285.26L740.17,281.23L738.45,275.48L731.12,275.12L728.24,272.96L728.60,269.30L720.26,266.35L716.67,259.16L712.35,259.95L710.20,256.43L712.78,254.27L709.19,249.31L704.59,248.16L704.80,244.14L702.65,243.20L701.28,234.93L703.51,231.12L701.64,223.22L699.63,222.28L698.48,218.04L689.71,216.60L692.37,213.22L690.50,208.98L691.43,203.73L687.05,205.10L683.88,203.73L685.39,200.79L681.51,198.92L684.67,195.25L682.81,193.45L681.44,186.70L685.25,179.72L684.10,174.76L686.26,170.67L686.04,167.29L683.88,167.00L687.48,161.75L685.68,159.52L688.70,157.87L686.11,154.06L692.01,151.61L691.79,143.78L697.11,143.35L699.27,147.73L705.95,150.11L712.93,148.60L714.15,151.76L721.34,154.35L725.29,158.16L729.32,157.58L732.55,153.56L735.36,153.70L738.23,159.59L742.26,161.82L747.07,159.88L752.04,161.18L755.41,168.15L763.47,172.10L768.14,170.31L770.44,167.50L776.55,167.72L776.62,170.74L774.32,172.61L774.18,176.85L780.00,184.32L779.78,190.15L772.38,198.85L771.45,204.02L761.38,206.75L761.31,210.06L765.41,214.59L771.45,215.09L773.96,216.67L776.26,214.16L778.35,215.16L777.20,218.98L773.67,221.06L768.71,219.62L763.90,224.58L761.74,235.29L769.43,234.79L771.59,236.44L771.37,240.25L775.69,247.95L771.37,252.84L774.54,254.49L779.28,254.42L778.13,257.87L775.47,260.74L773.60,265.06L774.11,270.52L770.58,272.25L772.38,274.98L771.59,284.18L769.14,285.76L764.62,284.97L755.49,286.19L752.18,284.97L742.26,286.69L739.60,285.26Z"},
-  {id:"poltava", name:"Полтавська", cx:506.6, cy:172.7, d:"M476.20,119.98L482.23,121.28L485.47,119.48L487.77,120.77L500.57,123.36L503.73,124.80L508.76,123.43L507.32,122.28L511.71,120.27L517.39,124.08L524.22,119.34L525.66,119.77L526.23,126.24L531.41,132.28L531.62,137.45L533.49,136.88L536.87,143.13L534.93,145.00L535.72,147.59L538.31,146.44L543.92,146.87L545.35,144.57L549.95,143.85L553.91,144.64L554.27,150.61L551.39,154.27L553.48,159.67L558.65,161.39L562.68,163.98L566.49,164.91L566.56,168.65L568.72,173.18L573.96,175.41L576.48,174.19L576.55,177.35L579.07,182.31L575.76,183.75L578.93,186.27L572.38,188.64L574.54,193.53L570.51,198.92L567.35,200.28L560.31,198.85L557.43,204.02L558.80,208.91L556.28,207.69L550.24,208.41L547.80,210.35L542.84,211.71L535.14,215.31L529.75,222.64L528.75,227.60L530.47,230.76L529.68,234.43L527.24,236.95L523.93,234.50L518.61,233.07L513.36,229.33L507.18,225.66L503.59,226.81L502.72,229.18L499.34,225.73L497.04,227.03L493.31,224.51L489.78,224.58L486.48,221.06L488.49,218.62L486.40,216.46L482.38,216.10L479.72,212.22L475.26,208.84L464.55,203.59L464.55,198.92L459.73,189.14L463.11,184.90L462.75,181.38L460.52,176.78L455.92,174.91L455.28,171.10L449.31,167.79L446.65,162.90L448.59,161.82L448.66,156.79L445.28,151.76L442.19,150.97L440.83,145.43L434.50,139.39L435.51,136.30L437.52,132.13L441.04,132.56L443.77,129.62L447.44,128.32L451.97,128.83L452.76,130.91L462.18,131.77L468.72,128.97L473.97,123.79L476.20,119.98Z"},
-  {id:"zaporizhzhia", name:"Запорізька", cx:593.5, cy:332.3, d:"M631.26,292.81L631.76,296.26L634.64,296.26L640.03,308.41L641.76,307.69L646.21,311.35L650.38,311.07L657.21,317.39L661.09,316.89L658.94,324.15L656.06,323.21L654.98,327.31L648.95,327.38L649.45,333.21L646.14,335.51L650.89,338.38L653.04,342.84L658.00,345.07L658.00,349.17L655.70,349.60L653.47,352.76L654.91,355.21L648.30,360.24L644.42,369.15L644.85,365.63L639.89,362.25L632.20,363.98L625.44,367.57L622.56,370.95L621.56,374.40L617.39,370.52L611.64,370.66L604.45,372.10L598.69,375.69L592.44,382.60L587.19,385.47L581.51,391.51L577.13,399.06L576.55,398.77L576.48,398.70L579.79,393.67L576.41,392.80L576.98,387.12L571.59,383.60L573.82,388.85L569.15,396.69L567.06,395.97L565.70,386.19L560.59,383.46L557.43,383.53L557.50,380.80L553.05,380.29L551.32,376.92L551.68,373.03L547.01,371.09L549.52,369.01L554.34,361.89L550.67,355.56L545.50,353.26L543.77,350.75L542.48,344.57L541.11,343.70L539.39,333.49L540.25,330.33L537.23,330.69L535.72,333.21L531.48,333.49L527.02,320.05L537.73,316.89L543.77,313.87L554.91,316.39L558.58,315.95L557.79,312.00L559.52,302.29L556.93,300.93L557.57,296.54L553.76,294.03L553.76,291.44L557.86,289.00L553.33,284.54L554.34,277.64L558.87,279.87L562.53,277.28L572.02,276.27L576.27,277.92L585.32,278.86L590.86,275.91L596.90,279.65L602.72,277.78L604.16,281.66L606.46,282.96L608.18,286.77L610.70,287.41L610.56,294.32L614.80,292.30L615.30,294.24L619.54,295.32L631.26,292.81Z"},
-  {id:"sevastopol", name:"м. Севастополь", cx:503.0, cy:509.9, lx:433.0, ly:517.9, d:"M507.83,521.99L503.87,520.19L500.71,515.52L497.83,515.95L491.36,511.21L493.95,508.47L500.35,507.47L497.62,505.60L499.13,501.64L497.69,496.68L500.13,492.30L500.64,494.46L505.02,496.18L505.74,498.70L502.15,500.85L502.79,504.74L506.75,504.38L508.69,507.18L506.96,509.98L511.35,513.43L513.58,519.69L507.83,521.99Z"},
-  {id:"crimea", name:"АР Крим", cx:536.0, cy:462.4, d:"M565.41,433.85L567.42,437.66L581.23,456.86L588.20,461.46L598.05,459.01L605.24,449.67L606.03,453.91L611.42,456.43L618.11,449.67L627.52,449.60L630.83,450.82L634.50,450.24L636.51,452.33L638.81,451.03L641.54,455.92L635.29,456.50L631.69,464.33L631.84,470.95L633.20,474.90L625.73,476.63L623.35,479.21L615.01,476.84L612.64,480.29L605.88,480.87L602.15,476.20L595.68,473.18L588.13,474.33L584.89,478.78L586.69,480.29L578.42,483.96L576.62,486.91L573.82,487.84L570.59,494.96L566.99,492.37L562.46,493.45L555.49,493.59L548.80,497.33L542.12,499.78L538.09,506.32L535.50,512.07L533.28,511.92L527.38,518.32L518.54,522.85L513.58,521.70L507.83,521.99L513.58,519.69L511.35,513.43L506.96,509.98L508.69,507.18L506.75,504.38L502.79,504.74L502.15,500.85L505.74,498.70L505.02,496.18L500.64,494.46L500.13,492.30L502.44,487.05L499.70,476.48L492.73,470.59L485.61,472.46L481.66,469.80L477.20,464.91L468.93,459.52L462.03,458.87L458.01,461.75L451.11,460.38L449.67,455.85L451.75,452.62L457.22,448.52L462.46,445.71L465.70,445.86L467.57,441.47L470.73,439.32L481.08,434.50L481.37,431.34L484.18,433.56L490.72,430.55L495.68,426.74L498.98,427.17L501.93,424.87L505.24,426.23L505.31,422.71L509.12,421.70L503.15,418.47L502.22,408.98L504.16,405.82L504.02,402.94L506.89,407.54L509.41,409.12L510.20,405.46L512.36,406.61L511.78,409.48L513.94,412.72L518.39,415.81L518.75,411.93L520.84,411.21L526.88,416.96L524.36,417.89L526.30,420.98L528.24,420.12L527.67,416.24L524.72,413.00L529.61,414.87L531.84,413.72L533.28,416.96L535.14,415.02L538.02,419.55L536.58,421.63L538.45,424.94L538.81,421.92L541.69,424.72L545.57,420.48L547.87,419.91L546.79,424.22L544.35,425.51L540.54,431.55L544.42,430.11L548.95,425.73L553.62,422.78L553.55,425.66L550.10,426.88L549.02,430.47L552.54,428.60L554.41,430.47L552.25,434.43L559.44,433.78L557.93,435.65L560.81,437.88L563.83,437.81L568.65,444.71L569.80,451.47L566.27,453.41L568.29,456.93L571.59,459.66L574.90,459.30L582.16,462.46L584.82,464.62L587.05,462.68L581.59,458.87L565.41,437.38L564.26,434.57L565.41,433.85Z"},
-  {id:"chernihiv", name:"Чернігівська", cx:432.2, cy:66.8, d:"M373.03,72.18L374.18,68.22L376.63,66.14L376.13,58.01L372.89,51.76L372.17,48.45L373.97,47.16L374.69,42.20L376.41,42.06L378.93,36.38L378.64,34.51L382.38,29.33L384.90,28.18L388.78,23.00L391.22,18.12L398.27,18.19L402.94,20.42L405.17,17.04L412.07,15.82L419.12,17.33L426.23,16.97L428.46,18.19L428.82,21.49L433.85,20.63L437.02,21.28L442.62,18.76L445.64,14.81L446.58,9.71L448.16,7.91L447.66,3.02L454.63,3.38L462.54,7.62L467.35,6.97L470.66,7.98L474.83,4.31L476.41,4.24L481.52,0.00L489.71,1.58L488.06,7.91L486.40,10.42L486.76,14.16L491.72,18.40L492.37,20.92L489.28,20.34L487.91,24.73L488.42,27.68L482.74,30.34L480.15,30.48L476.12,37.74L477.06,41.12L479.86,44.28L479.21,47.23L481.23,55.93L478.57,56.43L478.14,65.35L473.61,64.92L475.62,67.36L476.48,73.40L474.40,77.14L472.24,77.78L471.31,83.54L474.47,84.76L477.06,87.63L482.16,86.55L480.01,90.44L481.01,95.97L479.72,97.48L478.78,104.31L480.44,105.89L477.85,112.00L476.20,119.98L473.97,123.79L468.72,128.97L462.18,131.77L452.76,130.91L451.97,128.83L447.44,128.32L443.77,129.62L441.04,132.56L437.52,132.13L434.50,129.90L435.15,128.11L432.20,126.96L430.69,123.51L433.13,121.92L432.77,119.05L430.26,118.91L425.59,114.02L423.36,114.81L421.34,118.55L415.88,120.70L409.34,121.78L401.57,120.27L400.93,117.83L397.69,115.81L399.49,112.79L396.97,107.40L393.95,103.88L384.03,105.61L379.58,104.02L381.52,98.63L376.41,95.25L376.92,90.51L375.41,88.14L371.16,87.49L370.66,84.90L371.88,76.71L371.38,73.26L373.03,72.18Z"},
-  {id:"rivne", name:"Рівненська", cx:199.7, cy:75.1, d:"M255.42,49.68L252.12,50.61L251.61,55.71L248.52,52.41L246.87,60.53L244.57,60.89L245.29,66.14L241.12,71.53L237.95,77.71L233.71,80.88L234.93,87.56L233.93,93.74L235.51,97.70L231.56,105.25L233.21,107.69L231.20,110.28L228.61,107.40L222.07,111.00L219.33,109.99L212.15,113.66L206.97,120.56L199.13,126.88L196.40,126.67L191.94,131.05L188.85,132.35L187.85,128.47L189.00,125.16L186.55,126.17L182.24,124.30L177.49,123.87L171.17,128.90L166.28,128.83L160.46,130.41L156.14,128.47L156.36,132.35L151.54,137.88L145.14,131.85L144.50,123.51L146.15,119.19L140.69,118.11L146.73,113.80L143.13,107.12L146.44,105.32L145.58,101.65L151.04,103.02L152.62,101.94L152.55,98.20L155.50,98.92L155.64,94.39L158.88,96.26L165.99,93.53L168.87,94.03L170.45,96.84L175.27,99.14L176.92,95.47L177.49,89.72L181.09,87.06L184.11,82.82L183.61,78.65L187.85,77.86L188.13,75.99L185.76,71.24L182.60,70.81L183.03,68.29L186.27,67.86L187.78,64.13L182.89,60.03L178.50,53.49L179.36,50.11L175.84,49.53L173.83,51.04L168.29,50.75L169.52,39.18L171.74,36.30L168.36,33.72L169.52,26.60L174.26,21.85L175.91,16.18L171.74,13.95L180.73,14.31L193.24,17.33L196.76,20.56L206.18,21.85L207.40,24.95L216.32,26.02L223.72,30.05L226.38,30.77L230.55,29.62L236.80,31.34L237.38,37.38L240.40,37.89L239.18,41.48L244.57,42.20L248.38,40.33L256.36,42.85L257.44,44.64L255.42,49.68Z"},
-  {id:"chernivtsi", name:"Чернівецька", cx:166.8, cy:254.5, d:"M234.29,246.72L230.33,250.10L227.03,248.59L222.57,252.33L219.41,252.91L213.08,250.10L213.22,252.55L209.20,252.84L205.10,249.67L202.08,251.25L202.08,256.00L197.62,253.27L194.53,257.65L180.51,259.59L179.29,265.20L173.54,273.40L171.38,274.19L162.18,274.04L154.71,275.55L132.85,275.77L130.84,276.92L125.88,283.53L120.92,286.05L116.96,286.34L120.06,279.15L118.83,271.09L119.26,266.78L122.28,261.39L129.26,256.86L129.54,253.70L132.35,252.04L137.16,247.01L144.28,243.78L150.25,244.86L151.97,235.80L150.82,229.83L154.27,226.38L159.09,229.90L161.03,227.60L165.63,233.42L169.08,231.41L172.46,231.41L171.67,235.08L175.70,237.52L185.62,239.89L189.64,238.89L193.38,244.50L195.32,242.34L199.78,242.41L195.90,239.25L196.83,237.88L200.57,239.97L201.65,236.52L205.60,236.01L205.32,238.67L207.69,240.04L210.49,237.74L217.68,239.75L219.26,238.39L223.58,239.46L223.22,236.30L226.95,237.74L229.18,236.01L231.99,238.03L234.29,246.72Z"},
-  {id:"ivano", name:"Івано-Франківська", cx:110.2, cy:221.0, two:true, d:"M154.27,226.38L150.82,229.83L151.97,235.80L150.25,244.86L144.28,243.78L137.16,247.01L132.35,252.04L129.54,253.70L129.26,256.86L122.28,261.39L119.26,266.78L118.83,271.09L120.06,279.15L116.96,286.34L114.74,285.83L111.64,279.79L106.18,275.91L105.89,273.18L102.73,270.02L106.54,263.19L102.73,257.00L103.45,251.90L101.80,248.16L94.46,239.25L92.09,241.33L87.35,239.32L88.21,229.33L77.86,230.91L77.86,226.60L73.33,222.50L73.54,220.20L69.09,218.62L66.86,215.02L63.55,213.30L66.28,206.32L65.49,203.16L67.72,196.98L70.60,195.11L72.90,190.58L76.27,188.93L82.67,190.22L89.93,188.71L93.74,189.64L106.32,187.20L105.61,184.40L103.31,184.04L103.31,179.65L106.97,175.34L105.39,173.90L109.13,166.14L114.38,166.21L119.91,169.01L124.15,179.58L123.79,184.40L125.23,188.78L123.72,190.65L124.15,194.68L128.32,195.04L128.97,198.77L125.02,198.20L127.82,203.95L131.63,204.67L134.15,206.75L133.79,209.77L139.03,208.12L137.60,213.87L141.98,214.37L138.46,215.60L138.24,218.40L143.06,213.94L146.51,214.30L149.46,217.54L154.49,220.99L154.27,226.38Z"},
-  {id:"khmelnytskyi", name:"Хмельницька", cx:214.8, cy:177.5, d:"M229.18,236.01L226.95,237.74L223.22,236.30L223.58,239.46L219.26,238.39L217.68,239.75L210.49,237.74L207.69,240.04L205.32,238.67L205.60,236.01L201.65,236.52L200.57,239.97L196.83,237.88L195.90,239.25L199.78,242.41L195.32,242.34L193.38,244.50L189.64,238.89L185.62,239.89L185.47,236.01L182.89,233.86L183.53,231.41L180.30,228.39L182.02,220.05L180.30,217.68L181.02,214.45L179.87,210.64L181.52,207.69L180.80,204.88L182.46,202.51L181.59,196.19L183.82,192.02L184.18,181.74L183.03,180.44L181.45,173.61L184.32,170.52L186.77,164.48L185.04,161.18L186.62,157.22L184.90,153.77L184.25,144.79L188.06,141.84L186.48,140.40L187.56,136.30L190.29,134.79L188.85,132.35L191.94,131.05L196.40,126.67L199.13,126.88L206.97,120.56L212.15,113.66L219.33,109.99L222.07,111.00L228.61,107.40L231.20,110.28L235.51,114.81L231.99,119.98L238.82,126.88L241.98,131.99L247.08,130.69L248.31,136.09L246.87,141.91L248.45,145.07L243.42,146.37L244.50,150.32L242.70,152.41L244.64,153.63L247.23,160.39L255.85,163.55L250.46,168.87L252.76,170.74L249.02,178.43L250.03,182.38L248.95,184.11L252.55,185.04L251.61,187.85L254.06,195.18L253.05,196.91L254.06,202.73L248.59,205.39L242.34,202.08L240.11,204.38L237.24,203.88L232.35,210.49L230.76,216.03L232.27,226.52L230.98,227.46L229.18,236.01Z"},
-  {id:"lviv", name:"Львівська", cx:87.4, cy:150.7, d:"M140.69,118.11L146.15,119.19L144.50,123.51L145.14,131.85L151.54,137.88L153.70,141.98L151.90,146.15L144.93,149.03L138.82,149.53L138.67,154.56L135.08,155.57L131.13,161.32L121.28,164.99L119.91,169.01L114.38,166.21L109.13,166.14L105.39,173.90L106.97,175.34L103.31,179.65L103.31,184.04L105.61,184.40L106.32,187.20L93.74,189.64L89.93,188.71L82.67,190.22L76.27,188.93L72.90,190.58L70.60,195.11L67.72,196.98L65.49,203.16L66.28,206.32L63.55,213.30L54.06,210.35L48.81,206.97L46.30,201.29L42.13,201.79L37.67,195.90L38.60,192.23L37.24,190.65L37.31,185.91L31.78,179.51L30.62,179.87L34.08,172.75L34.29,166.71L32.93,163.05L32.21,155.64L39.40,146.51L41.62,145.72L55.57,130.26L71.67,116.68L77.64,113.15L82.10,109.27L83.46,106.61L86.34,105.53L93.89,106.40L96.26,105.75L98.13,100.14L102.59,97.48L103.31,91.66L105.75,91.30L108.77,95.54L114.38,94.89L116.25,98.56L118.98,99.14L120.27,101.58L116.53,104.46L118.11,107.98L120.34,106.40L128.83,113.80L134.65,113.94L135.73,112.65L140.98,115.53L140.69,118.11Z"},
-  {id:"ternopil", name:"Тернопільська", cx:159.3, cy:179.5, d:"M154.27,226.38L154.49,220.99L149.46,217.54L146.51,214.30L143.06,213.94L138.24,218.40L138.46,215.60L141.98,214.37L137.60,213.87L139.03,208.12L133.79,209.77L134.15,206.75L131.63,204.67L127.82,203.95L125.02,198.20L128.97,198.77L128.32,195.04L124.15,194.68L123.72,190.65L125.23,188.78L123.79,184.40L124.15,179.58L119.91,169.01L121.28,164.99L131.13,161.32L135.08,155.57L138.67,154.56L138.82,149.53L144.93,149.03L151.90,146.15L153.70,141.98L151.54,137.88L156.36,132.35L156.14,128.47L160.46,130.41L166.28,128.83L171.17,128.90L177.49,123.87L182.24,124.30L186.55,126.17L189.00,125.16L187.85,128.47L188.85,132.35L190.29,134.79L187.56,136.30L186.48,140.40L188.06,141.84L184.25,144.79L184.90,153.77L186.62,157.22L185.04,161.18L186.77,164.48L184.32,170.52L181.45,173.61L183.03,180.44L184.18,181.74L183.82,192.02L181.59,196.19L182.46,202.51L180.80,204.88L181.52,207.69L179.87,210.64L181.02,214.45L180.30,217.68L182.02,220.05L180.30,228.39L183.53,231.41L182.89,233.86L185.47,236.01L185.62,239.89L175.70,237.52L171.67,235.08L172.46,231.41L169.08,231.41L165.63,233.42L161.03,227.60L159.09,229.90L154.27,226.38Z"},
-  {id:"zakarpattia", name:"Закарпатська", cx:49.7, cy:233.0, d:"M63.55,213.30L66.86,215.02L69.09,218.62L73.54,220.20L73.33,222.50L77.86,226.60L77.86,230.91L88.21,229.33L87.35,239.32L92.09,241.33L94.46,239.25L101.80,248.16L103.45,251.90L102.73,257.00L106.54,263.19L102.73,270.02L96.62,268.36L87.49,271.02L76.85,265.42L72.25,266.71L68.37,262.76L59.02,260.38L55.14,262.18L50.04,260.10L45.07,253.77L40.26,252.33L37.09,257.51L35.01,258.73L31.63,256.93L28.40,260.38L26.74,258.01L28.47,254.99L27.46,251.90L24.15,248.52L17.61,248.67L16.39,243.42L13.73,238.74L8.27,237.95L6.61,234.29L6.04,226.95L0.00,225.95L1.51,216.53L2.59,214.30L11.00,207.83L13.73,201.94L14.02,198.70L16.53,196.11L18.91,190.87L22.21,189.93L23.72,184.83L25.59,184.47L27.89,187.34L32.78,187.92L36.59,191.80L37.24,190.65L38.60,192.23L37.67,195.90L42.13,201.79L46.30,201.29L48.81,206.97L54.06,210.35L63.55,213.30Z"},
-  {id:"volyn", name:"Волинська", cx:138.2, cy:59.3, d:"M140.69,118.11L140.98,115.53L135.73,112.65L134.65,113.94L128.83,113.80L120.34,106.40L118.11,107.98L116.53,104.46L120.27,101.58L118.98,99.14L116.25,98.56L114.38,94.89L108.77,95.54L105.75,91.30L103.31,91.66L102.80,86.12L98.92,81.45L99.14,78.22L105.89,78.14L106.11,76.20L100.43,70.95L98.20,66.07L97.70,57.44L92.95,51.47L89.50,42.92L92.67,38.96L90.08,32.49L90.94,29.69L90.15,25.31L91.80,23.94L96.84,23.58L102.08,25.88L105.75,28.54L112.51,23.80L117.47,21.21L120.34,15.60L124.73,11.36L134.86,11.79L138.10,12.80L149.67,12.22L157.29,10.42L163.91,13.01L171.74,13.95L175.91,16.18L174.26,21.85L169.52,26.60L168.36,33.72L171.74,36.30L169.52,39.18L168.29,50.75L173.83,51.04L175.84,49.53L179.36,50.11L178.50,53.49L182.89,60.03L187.78,64.13L186.27,67.86L183.03,68.29L182.60,70.81L185.76,71.24L188.13,75.99L187.85,77.86L183.61,78.65L184.11,82.82L181.09,87.06L177.49,89.72L176.92,95.47L175.27,99.14L170.45,96.84L168.87,94.03L165.99,93.53L158.88,96.26L155.64,94.39L155.50,98.92L152.55,98.20L152.62,101.94L151.04,103.02L145.58,101.65L146.44,105.32L143.13,107.12L146.73,113.80L140.69,118.11Z"},
-  {id:"cherkasy", name:"Черкаська", cx:403.3, cy:203.0, d:"M434.50,139.39L440.83,145.43L442.19,150.97L445.28,151.76L448.66,156.79L448.59,161.82L446.65,162.90L449.31,167.79L455.28,171.10L455.92,174.91L460.52,176.78L462.75,181.38L463.11,184.90L459.73,189.14L464.55,198.92L464.55,203.59L462.97,208.41L464.55,211.14L465.05,215.88L466.92,220.70L464.19,223.14L459.95,221.64L457.79,224.29L452.69,225.23L450.03,217.03L446.15,217.32L444.85,214.73L440.97,217.18L436.94,221.85L436.22,226.09L431.77,225.23L425.87,229.47L422.21,225.37L417.03,223.94L415.38,225.66L410.78,225.16L409.91,230.98L407.04,235.73L401.36,238.10L400.35,236.80L394.74,236.16L389.28,237.52L384.32,235.51L378.86,235.73L374.11,234.65L370.23,237.38L369.51,241.12L366.78,243.99L368.15,247.59L364.19,248.23L361.24,246.94L359.81,249.60L354.06,252.33L350.60,251.97L346.22,254.06L341.26,252.48L344.06,248.52L341.62,240.97L337.45,237.74L338.74,235.29L333.85,232.92L331.70,223.07L328.46,220.84L330.26,218.47L327.02,215.96L331.91,209.27L331.91,202.80L335.22,206.61L339.25,206.25L341.55,201.94L346.72,199.64L349.81,200.36L351.40,196.91L352.47,200.00L359.95,201.87L361.68,203.23L363.54,196.33L366.28,197.77L370.30,197.55L371.74,195.68L376.41,198.27L382.38,195.83L384.03,196.83L385.83,192.66L391.58,187.56L395.03,183.39L393.95,179.51L395.89,176.06L397.05,170.52L396.40,166.21L397.84,163.91L403.16,161.25L407.18,160.74L409.05,164.12L413.08,163.69L418.83,164.84L423.14,157.44L423.14,154.99L426.09,152.91L425.08,148.67L427.89,145.29L431.34,143.20L431.77,138.67L434.50,139.39Z"},
-  {id:"kirovohrad", name:"Кіровоградська", cx:433.4, cy:255.2, two:true, d:"M346.22,254.06L350.60,251.97L354.06,252.33L359.81,249.60L361.24,246.94L364.19,248.23L368.15,247.59L366.78,243.99L369.51,241.12L370.23,237.38L374.11,234.65L378.86,235.73L384.32,235.51L389.28,237.52L394.74,236.16L400.35,236.80L401.36,238.10L407.04,235.73L409.91,230.98L410.78,225.16L415.38,225.66L417.03,223.94L422.21,225.37L425.87,229.47L431.77,225.23L436.22,226.09L436.94,221.85L440.97,217.18L444.85,214.73L446.15,217.32L450.03,217.03L452.69,225.23L457.79,224.29L459.95,221.64L464.19,223.14L466.92,220.70L465.05,215.88L464.55,211.14L462.97,208.41L464.55,203.59L475.26,208.84L479.72,212.22L482.38,216.10L486.40,216.46L488.49,218.62L486.48,221.06L489.78,224.58L493.31,224.51L497.04,227.03L499.34,225.73L502.72,229.18L503.59,226.81L507.18,225.66L513.36,229.33L509.34,236.30L506.96,233.42L502.08,233.35L497.76,235.58L499.78,238.96L506.39,240.40L509.19,242.27L504.95,245.72L493.16,251.61L494.74,257.15L496.18,270.30L490.93,274.91L489.21,274.19L485.68,279.22L484.03,275.05L483.38,280.30L480.15,280.94L476.12,284.61L475.12,288.49L472.67,283.46L468.50,284.39L465.56,288.49L463.83,286.98L459.66,289.21L461.03,292.01L458.65,292.95L459.52,296.47L457.72,299.35L450.10,300.50L442.69,297.91L439.82,297.84L435.58,302.58L430.47,298.48L423.64,299.35L422.42,295.97L423.64,293.74L421.70,289.50L419.91,289.43L416.89,284.68L419.55,282.74L419.19,279.79L412.93,277.92L407.76,281.23L407.76,277.85L404.02,278.50L396.90,277.49L394.10,271.74L386.33,271.31L382.09,274.69L379.00,273.11L373.03,272.89L369.58,275.05L364.12,273.75L357.36,273.54L354.92,275.26L345.79,274.40L342.12,269.23L338.96,269.08L337.45,271.38L332.42,270.02L333.06,266.93L330.98,265.56L332.92,260.53L336.66,256.14L339.03,255.28L340.11,259.02L346.22,254.06Z"},
-  {id:"kyiv_obl", name:"Київська", cx:366.5, cy:134.8, d:"M434.50,139.39L431.77,138.67L431.34,143.20L427.89,145.29L425.08,148.67L426.09,152.91L423.14,154.99L423.14,157.44L418.83,164.84L413.08,163.69L409.05,164.12L407.18,160.74L403.16,161.25L397.84,163.91L396.40,166.21L397.05,170.52L395.89,176.06L393.95,179.51L395.03,183.39L391.58,187.56L385.83,192.66L384.03,196.83L382.38,195.83L376.41,198.27L371.74,195.68L370.30,197.55L366.28,197.77L363.54,196.33L361.68,203.23L359.95,201.87L352.47,200.00L351.40,196.91L349.81,200.36L346.72,199.64L341.55,201.94L339.25,206.25L335.22,206.61L331.91,202.80L329.83,201.65L327.53,197.41L325.08,196.55L323.86,193.31L326.59,190.36L326.02,184.97L327.02,182.31L324.36,179.80L325.30,175.84L322.50,174.55L324.15,170.95L321.49,170.74L322.50,165.35L330.91,160.96L335.51,155.71L333.28,151.54L333.21,146.22L336.08,144.28L334.57,140.69L334.86,135.30L331.55,131.13L330.40,126.31L328.61,124.08L325.01,124.73L327.31,119.05L328.10,114.66L326.74,112.87L331.84,105.39L331.12,101.51L327.74,100.14L328.75,95.54L324.65,87.42L327.24,88.21L328.39,81.52L323.07,76.49L321.56,78.22L320.20,70.31L325.08,66.50L325.59,62.83L324.08,61.32L328.75,61.03L330.48,57.66L335.22,54.71L338.60,55.00L340.04,57.94L344.42,58.59L351.18,55.64L356.93,55.71L359.23,57.01L364.12,62.26L364.98,67.79L373.03,72.18L371.38,73.26L371.88,76.71L370.66,84.90L371.16,87.49L375.41,88.14L376.92,90.51L376.41,95.25L381.52,98.63L379.58,104.02L384.03,105.61L393.95,103.88L396.97,107.40L399.49,112.79L397.69,115.81L400.93,117.83L401.57,120.27L409.34,121.78L415.88,120.70L421.34,118.55L423.36,114.81L425.59,114.02L430.26,118.91L432.77,119.05L433.13,121.92L430.69,123.51L432.20,126.96L435.15,128.11L434.50,129.90L437.52,132.13L435.51,136.30L434.50,139.39ZM383.60,115.67L383.39,112.08L379.43,110.06L378.50,112.94L375.41,116.03L371.45,115.53L371.24,117.61L368.29,114.45L366.71,109.99L362.54,109.85L359.81,111.64L359.23,116.03L357.43,117.54L355.71,127.68L358.01,125.95L361.32,126.45L361.82,129.11L365.05,133.43L367.50,140.40L369.30,141.05L370.01,147.16L371.67,152.69L374.33,151.47L373.39,145.65L374.83,143.49L373.03,136.09L377.78,136.59L378.14,133.50L380.94,134.72L380.94,132.06L383.31,130.77L379.86,125.02L379.58,120.63L383.60,115.67Z"},
-  {id:"mykolaiv", name:"Миколаївська", cx:419.6, cy:321.7, d:"M354.92,275.26L357.36,273.54L364.12,273.75L369.58,275.05L373.03,272.89L379.00,273.11L382.09,274.69L386.33,271.31L394.10,271.74L396.90,277.49L404.02,278.50L407.76,277.85L407.76,281.23L412.93,277.92L419.19,279.79L419.55,282.74L416.89,284.68L419.91,289.43L421.70,289.50L423.64,293.74L422.42,295.97L423.64,299.35L430.47,298.48L435.58,302.58L439.82,297.84L442.69,297.91L450.10,300.50L457.72,299.35L459.52,296.47L458.65,292.95L461.03,292.01L459.66,289.21L463.83,286.98L465.56,288.49L468.50,284.39L472.67,283.46L475.12,288.49L474.97,291.15L477.20,293.38L476.27,301.00L477.27,304.02L472.89,305.24L474.25,308.33L473.82,313.01L477.56,313.58L478.71,317.03L479.14,324.51L476.48,322.35L474.76,325.01L477.99,326.74L479.14,330.33L478.28,333.93L479.65,336.66L475.76,339.82L472.53,339.53L469.80,345.00L470.23,346.79L476.34,350.75L474.69,353.70L472.46,351.75L471.52,354.63L474.25,355.71L464.98,359.95L470.95,360.81L465.63,363.11L460.24,363.11L459.01,361.68L452.90,360.02L452.62,362.11L446.15,362.18L444.78,364.62L438.67,364.34L436.30,368.15L431.84,368.07L426.95,369.66L425.73,364.48L428.82,358.30L428.53,355.35L426.02,353.55L427.74,350.82L423.50,350.39L423.64,343.63L420.77,338.46L420.62,343.34L423.28,345.28L421.49,350.82L426.45,351.47L424.22,355.06L427.31,355.56L426.23,360.67L424.08,361.68L422.57,365.77L424.36,368.58L424.36,373.54L422.13,375.69L418.18,375.69L413.80,373.97L409.48,376.27L405.10,374.26L411.49,363.40L406.97,367.64L403.52,364.12L406.32,369.44L402.72,374.76L398.55,377.06L391.87,375.12L391.01,362.25L386.33,357.43L385.61,353.70L393.59,352.55L395.75,350.75L397.76,344.28L394.24,339.96L389.50,338.81L392.08,335.08L391.15,332.92L386.19,334.21L380.65,332.42L377.35,322.28L379.07,314.88L375.69,312.07L375.33,308.84L371.45,311.71L370.23,309.20L366.85,308.41L361.82,309.20L359.45,307.40L358.58,297.91L355.49,294.89L354.70,287.77L351.25,284.11L351.68,279.22L355.85,277.49L354.92,275.26ZM420.05,385.18L416.02,383.96L413.15,385.83L406.97,379.65L409.48,380.94L417.39,380.51L421.70,382.67L420.05,385.18L420.05,385.18Z"},
-  {id:"vinnytsia", name:"Вінницька", cx:287.5, cy:221.8, d:"M346.22,254.06L340.11,259.02L339.03,255.28L336.66,256.14L332.92,260.53L330.98,265.56L333.06,266.93L332.42,270.02L327.53,272.03L327.89,277.06L319.91,276.70L317.25,275.26L312.93,276.77L308.91,276.70L302.80,272.53L299.99,273.40L300.07,276.34L291.73,281.38L289.35,273.90L279.65,270.52L277.21,270.81L275.62,276.20L271.60,269.15L269.73,271.60L268.65,269.37L270.95,265.06L267.72,264.48L263.47,265.85L262.76,262.68L258.30,263.33L259.38,260.81L257.65,258.23L252.04,256.72L249.67,252.62L244.93,248.81L239.54,248.52L238.67,246.29L234.29,246.72L231.99,238.03L229.18,236.01L230.98,227.46L232.27,226.52L230.76,216.03L232.35,210.49L237.24,203.88L240.11,204.38L242.34,202.08L248.59,205.39L254.06,202.73L253.05,196.91L254.06,195.18L251.61,187.85L252.55,185.04L248.95,184.11L250.03,182.38L249.02,178.43L252.76,170.74L250.46,168.87L255.85,163.55L262.54,163.98L272.89,162.76L278.07,163.84L279.87,161.97L285.76,163.69L291.73,163.55L297.33,158.08L300.43,158.88L301.50,164.48L303.95,168.36L301.72,170.88L303.37,177.57L314.66,178.43L322.50,174.55L325.30,175.84L324.36,179.80L327.02,182.31L326.02,184.97L326.59,190.36L323.86,193.31L325.08,196.55L327.53,197.41L329.83,201.65L331.91,202.80L331.91,209.27L327.02,215.96L330.26,218.47L328.46,220.84L331.70,223.07L333.85,232.92L338.74,235.29L337.45,237.74L341.62,240.97L344.06,248.52L341.26,252.48L346.22,254.06Z"},
-];
-const MAP_W = 780.00, MAP_H = 522.85;
+        /* ---------------- побудова мапи ---------------- */
+        const svg = document.getElementById("map");
+        const tip = document.getElementById("tip");
+        const plate = document.getElementById("plate");
 
-/* ---------------- стан ---------------- */
-const KEY = "ua-region-map-v1";
-const NS = "http://www.w3.org/2000/svg";
-let state = {};
-let brush = "been";
+        function buildMap() {
+          const gLand = document.createElementNS(NS, "g");
+          const gLbl = document.createElementNS(NS, "g");
 
-REGIONS.forEach(r => state[r.id] = "none");
+          REGIONS.forEach((r) => {
+            const p = document.createElementNS(NS, "path");
+            p.setAttribute("d", r.d);
+            p.setAttribute("class", "rg");
+            p.setAttribute("data-id", r.id);
+            p.setAttribute("data-s", state[r.id]);
+            p.setAttribute("tabindex", "0");
+            p.setAttribute("role", "button");
+            gLand.appendChild(p);
+            r.el = p;
 
-/* ---------------- сховище ---------------- */
-async function save(){
-  const val = JSON.stringify(state);
-  try{ if(window.storage && window.storage.set) await window.storage.set(KEY, val, false); }catch(e){}
-  try{ localStorage.setItem(KEY, val); }catch(e){}
-}
-async function load(){
-  let raw = null;
-  try{ if(window.storage && window.storage.get){ const r = await window.storage.get(KEY,false); if(r && r.value) raw = r.value; } }catch(e){}
-  if(!raw){ try{ raw = localStorage.getItem(KEY); }catch(e){} }
-  if(raw) apply(JSON.parse(raw));
-}
-function apply(obj){
-  if(!obj) return;
-  const src = obj.regions || obj;
-  REGIONS.forEach(r=>{
-    const v = src[r.id];
-    if(SORDER.indexOf(v) > -1) state[r.id] = v;
-  });
-}
-function fromHash(){
-  const m = location.hash.match(/s=([0-3]+)/);
-  if(!m || m[1].length !== REGIONS.length) return false;
-  REGIONS.forEach((r,i)=> state[r.id] = SORDER[+m[1][i]]);
-  return true;
-}
-function toCode(){ return REGIONS.map(r=>SORDER.indexOf(state[r.id])).join(""); }
+            // label position: own centroid, or an offset point (lx/ly) for tiny regions with a leader line
+            const lx = r.lx !== undefined ? r.lx : r.cx;
+            const ly = r.ly !== undefined ? r.ly : r.cy;
 
-/* ---------------- побудова мапи ---------------- */
-const svg = document.getElementById("map");
-const tip = document.getElementById("tip");
-const plate = document.getElementById("plate");
+            if (r.lx !== undefined) {
+              const ln = document.createElementNS(NS, "path");
+              ln.setAttribute(
+                "d",
+                "M" +
+                  r.cx.toFixed(1) +
+                  "," +
+                  r.cy.toFixed(1) +
+                  "L" +
+                  lx.toFixed(1) +
+                  "," +
+                  ly.toFixed(1),
+              );
+              ln.setAttribute("class", "leader");
+              gLbl.appendChild(ln);
+            }
 
-function buildMap(){
-  const gLand = document.createElementNS(NS,"g");
-  const gLbl  = document.createElementNS(NS,"g");
+            const t = document.createElementNS(NS, "text");
+            t.setAttribute("x", lx);
+            t.setAttribute("y", ly);
+            t.setAttribute("class", "lbl");
+            t.setAttribute("data-id", r.id);
+            if (r.two) {
+              const parts = r.name.split("-");
+              const l1 = document.createElementNS(NS, "tspan");
+              l1.setAttribute("x", lx);
+              l1.setAttribute("dy", "-4");
+              l1.textContent =
+                parts.length > 1 ? parts[0] + "-" : r.name.slice(0, 7) + "-";
+              const l2 = document.createElementNS(NS, "tspan");
+              l2.setAttribute("x", lx);
+              l2.setAttribute("dy", "9.6");
+              l2.textContent =
+                parts.length > 1 ? parts.slice(1).join("-") : r.name.slice(7);
+              t.appendChild(l1);
+              t.appendChild(l2);
+            } else {
+              t.textContent = r.name;
+            }
+            gLbl.appendChild(t);
+            r.txt = t;
+          });
 
-  REGIONS.forEach(r=>{
-    const p = document.createElementNS(NS,"path");
-    p.setAttribute("d", r.d);
-    p.setAttribute("class","rg");
-    p.setAttribute("data-id", r.id);
-    p.setAttribute("data-s", state[r.id]);
-    p.setAttribute("tabindex","0");
-    p.setAttribute("role","button");
-    gLand.appendChild(p);
-    r.el = p;
+          svg.appendChild(gLand);
+          svg.appendChild(gLbl);
+        }
 
-    // label position: own centroid, or an offset point (lx/ly) for tiny regions with a leader line
-    const lx = (r.lx!==undefined) ? r.lx : r.cx;
-    const ly = (r.ly!==undefined) ? r.ly : r.cy;
+        /* ---------------- список ---------------- */
+        const listEl = document.getElementById("list");
+        function buildList() {
+          REGIONS.slice()
+            .sort((a, b) => a.name.localeCompare(b.name, "uk"))
+            .forEach((r) => {
+              const li = document.createElement("li");
+              const b = document.createElement("button");
+              b.className = "row";
+              b.type = "button";
+              b.dataset.id = r.id;
+              const d = document.createElement("i");
+              d.className = "dot";
+              d.dataset.s = state[r.id];
+              const s = document.createElement("span");
+              s.textContent = r.name;
+              b.appendChild(d);
+              b.appendChild(s);
+              li.appendChild(b);
+              listEl.appendChild(li);
+              r.dot = d;
+            });
+        }
 
-    if(r.lx!==undefined){
-      const ln = document.createElementNS(NS,"path");
-      ln.setAttribute("d", "M"+r.cx.toFixed(1)+","+r.cy.toFixed(1)+"L"+lx.toFixed(1)+","+ly.toFixed(1));
-      ln.setAttribute("class","leader");
-      gLbl.appendChild(ln);
-    }
+        /* ---------------- стрічка ---------------- */
+        const ribbon = document.getElementById("ribbon");
+        function buildRibbon() {
+          STATUSES.forEach((s) => {
+            const b = document.createElement("button");
+            b.className = "seg";
+            b.type = "button";
+            b.dataset.s = s.id;
+            b.setAttribute("aria-pressed", String(s.id === brush));
+            b.innerHTML =
+              '<span class="seg-n">0</span><span class="seg-l">' +
+              s.label +
+              "</span>";
+            b.addEventListener("click", () => setBrush(s.id));
+            ribbon.appendChild(b);
+            s.el = b;
+          });
+        }
+        function setBrush(id) {
+          brush = id;
+          STATUSES.forEach((s) =>
+            s.el.setAttribute("aria-pressed", String(s.id === brush)),
+          );
+          document.getElementById("brushName").textContent = STATUSES.find(
+            (s) => s.id === id,
+          ).label;
+        }
 
-    const t = document.createElementNS(NS,"text");
-    t.setAttribute("x", lx); t.setAttribute("y", ly);
-    t.setAttribute("class","lbl");
-    t.setAttribute("data-id", r.id);
-    if(r.two){
-      const parts = r.name.split("-");
-      const l1 = document.createElementNS(NS,"tspan");
-      l1.setAttribute("x",lx); l1.setAttribute("dy","-4");
-      l1.textContent = parts.length>1 ? parts[0]+"-" : r.name.slice(0,7)+"-";
-      const l2 = document.createElementNS(NS,"tspan");
-      l2.setAttribute("x",lx); l2.setAttribute("dy","9.6");
-      l2.textContent = parts.length>1 ? parts.slice(1).join("-") : r.name.slice(7);
-      t.appendChild(l1); t.appendChild(l2);
-    }else{
-      t.textContent = r.name;
-    }
-    gLbl.appendChild(t);
-    r.txt = t;
-  });
+        /* ---------------- рендер ---------------- */
+        function getCounts() {
+          const counts = { home: 0, been: 0, transit: 0, none: 0 };
+          REGIONS.forEach((r) => counts[state[r.id]]++);
+          return counts;
+        }
 
-  svg.appendChild(gLand);
-  svg.appendChild(gLbl);
-}
+        function render() {
+          const counts = getCounts();
+          REGIONS.forEach((r) => {
+            const v = state[r.id];
+            r.el.setAttribute("data-s", v);
+            r.dot.dataset.s = v;
+            r.txt.classList.toggle("dark", v === "transit");
+          });
+          const total = REGIONS.length;
+          STATUSES.forEach((s) => {
+            s.el.querySelector(".seg-n").textContent = counts[s.id];
+            s.el.style.flexGrow = String(1 + counts[s.id] * 1.4);
+          });
+          const visited = counts.home + counts.been + counts.transit;
+          document.getElementById("pct").textContent =
+            Math.round((visited / total) * 100) + "%";
+        }
 
-/* ---------------- список ---------------- */
-const listEl = document.getElementById("list");
-function buildList(){
-  REGIONS.slice().sort((a,b)=>a.name.localeCompare(b.name,"uk")).forEach(r=>{
-    const li = document.createElement("li");
-    const b  = document.createElement("button");
-    b.className = "row"; b.type="button"; b.dataset.id = r.id;
-    const d = document.createElement("i"); d.className="dot"; d.dataset.s = state[r.id];
-    const s = document.createElement("span"); s.textContent = r.name;
-    b.appendChild(d); b.appendChild(s);
-    li.appendChild(b); listEl.appendChild(li);
-    r.dot = d;
-  });
-}
+        function paint(id) {
+          if (state[id] === brush) return;
+          state[id] = brush;
+          render();
+          save();
+        }
 
-/* ---------------- стрічка ---------------- */
-const ribbon = document.getElementById("ribbon");
-function buildRibbon(){
-  STATUSES.forEach(s=>{
-    const b = document.createElement("button");
-    b.className="seg"; b.type="button"; b.dataset.s = s.id;
-    b.setAttribute("aria-pressed", String(s.id===brush));
-    b.innerHTML = '<span class="seg-n">0</span><span class="seg-l">'+s.label+'</span>';
-    b.addEventListener("click", ()=> setBrush(s.id));
-    ribbon.appendChild(b);
-    s.el = b;
-  });
-}
-function setBrush(id){
-  brush = id;
-  STATUSES.forEach(s=> s.el.setAttribute("aria-pressed", String(s.id===brush)));
-  document.getElementById("brushName").textContent = STATUSES.find(s=>s.id===id).label;
-}
+        /* ---------------- події ---------------- */
+        svg.addEventListener("click", (e) => {
+          const p = e.target.closest(".rg");
+          if (p) paint(p.dataset.id);
+        });
+        svg.addEventListener("keydown", (e) => {
+          if (e.key !== "Enter" && e.key !== " ") return;
+          const p = e.target.closest(".rg");
+          if (!p) return;
+          e.preventDefault();
+          paint(p.dataset.id);
+        });
+        svg.addEventListener("mousemove", (e) => {
+          const p = e.target.closest(".rg");
+          if (!p) {
+            tip.classList.remove("on");
+            return;
+          }
+          const r = REGIONS.find((x) => x.id === p.dataset.id);
+          const st = STATUSES.find((s) => s.id === state[r.id]);
+          tip.innerHTML = r.name + " <i>· " + st.label.toLowerCase() + "</i>";
+          const box = plate.getBoundingClientRect();
+          tip.style.left = e.clientX - box.left + "px";
+          tip.style.top = e.clientY - box.top + "px";
+          tip.classList.add("on");
+        });
+        svg.addEventListener("mouseleave", () => tip.classList.remove("on"));
 
-/* ---------------- рендер ---------------- */
-function getCounts(){
-  const counts = {home:0,been:0,transit:0,none:0};
-  REGIONS.forEach(r=> counts[state[r.id]]++);
-  return counts;
-}
+        listEl.addEventListener("click", (e) => {
+          const b = e.target.closest(".row");
+          if (b) paint(b.dataset.id);
+        });
 
-function render(){
-  const counts = getCounts();
-  REGIONS.forEach(r=>{
-    const v = state[r.id];
-    r.el.setAttribute("data-s", v);
-    r.dot.dataset.s = v;
-    r.txt.classList.toggle("dark", v==="transit");
-  });
-  const total = REGIONS.length;
-  STATUSES.forEach(s=>{
-    s.el.querySelector(".seg-n").textContent = counts[s.id];
-    s.el.style.flexGrow = String(1 + counts[s.id]*1.4);
-  });
-  const visited = counts.home + counts.been + counts.transit;
-  document.getElementById("pct").textContent = Math.round(visited/total*100) + "%";
-}
+        document.addEventListener("keydown", (e) => {
+          if (e.target.matches("input")) return;
+          const i = ["1", "2", "3", "4"].indexOf(e.key);
+          if (i > -1) setBrush(SORDER[i]);
+        });
 
-function paint(id){
-  if(state[id] === brush) return;
-  state[id] = brush;
-  render();
-  save();
-}
+        /* ---------------- дії ---------------- */
+        const toastEl = document.getElementById("toast");
+        let toastT;
+        function toast(msg) {
+          toastEl.textContent = msg;
+          toastEl.classList.add("on");
+          clearTimeout(toastT);
+          toastT = setTimeout(() => toastEl.classList.remove("on"), 2400);
+        }
 
-/* ---------------- події ---------------- */
-svg.addEventListener("click", e=>{
-  const p = e.target.closest(".rg"); if(p) paint(p.dataset.id);
-});
-svg.addEventListener("keydown", e=>{
-  if(e.key!=="Enter" && e.key!==" ") return;
-  const p = e.target.closest(".rg"); if(!p) return;
-  e.preventDefault(); paint(p.dataset.id);
-});
-svg.addEventListener("mousemove", e=>{
-  const p = e.target.closest(".rg");
-  if(!p){ tip.classList.remove("on"); return; }
-  const r = REGIONS.find(x=>x.id===p.dataset.id);
-  const st = STATUSES.find(s=>s.id===state[r.id]);
-  tip.innerHTML = r.name + ' <i>· ' + st.label.toLowerCase() + '</i>';
-  const box = plate.getBoundingClientRect();
-  tip.style.left = (e.clientX - box.left) + "px";
-  tip.style.top  = (e.clientY - box.top) + "px";
-  tip.classList.add("on");
-});
-svg.addEventListener("mouseleave", ()=> tip.classList.remove("on"));
+        /* ---------------- скріншот / поділитися ---------------- */
+        function roundRectPath(ctx, x, y, w, h, r) {
+          ctx.beginPath();
+          ctx.moveTo(x + r, y);
+          ctx.arcTo(x + w, y, x + w, y + h, r);
+          ctx.arcTo(x + w, y + h, x, y + h, r);
+          ctx.arcTo(x, y + h, x, y, r);
+          ctx.arcTo(x, y, x + w, y, r);
+          ctx.closePath();
+        }
 
-listEl.addEventListener("click", e=>{
-  const b = e.target.closest(".row"); if(b) paint(b.dataset.id);
-});
+        function svgToStandaloneString(svgEl) {
+          const clone = svgEl.cloneNode(true);
+          const origAll = svgEl.querySelectorAll("*");
+          const cloneAll = clone.querySelectorAll("*");
+          const props = [
+            "fill",
+            "stroke",
+            "stroke-width",
+            "stroke-linejoin",
+            "paint-order",
+            "font-family",
+            "font-size",
+            "font-weight",
+            "text-anchor",
+            "opacity",
+          ];
+          origAll.forEach((el, i) => {
+            const cs = getComputedStyle(el);
+            const target = cloneAll[i];
+            if (!target) return;
+            props.forEach((p) => {
+              const v = cs.getPropertyValue(p);
+              if (v) target.style.setProperty(p, v);
+            });
+          });
+          clone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+          const bg = document.createElementNS(NS, "rect");
+          bg.setAttribute("x", "0");
+          bg.setAttribute("y", "0");
+          bg.setAttribute("width", String(MAP_W));
+          bg.setAttribute("height", String(MAP_H));
+          bg.setAttribute(
+            "fill",
+            getComputedStyle(document.getElementById("plate"))
+              .backgroundColor || "#F5F6F2",
+          );
+          clone.insertBefore(bg, clone.firstChild);
+          return new XMLSerializer().serializeToString(clone);
+        }
 
-document.addEventListener("keydown", e=>{
-  if(e.target.matches("input")) return;
-  const i = ["1","2","3","4"].indexOf(e.key);
-  if(i>-1) setBrush(SORDER[i]);
-});
+        async function buildShareCanvas() {
+          try {
+            await document.fonts.ready;
+          } catch (e) {}
 
-/* ---------------- дії ---------------- */
-const toastEl = document.getElementById("toast");
-let toastT;
-function toast(msg){
-  toastEl.textContent = msg; toastEl.classList.add("on");
-  clearTimeout(toastT); toastT = setTimeout(()=>toastEl.classList.remove("on"), 2400);
-}
+          const svgString = svgToStandaloneString(svg);
+          const svgBlob = new Blob([svgString], {
+            type: "image/svg+xml;charset=utf-8",
+          });
+          const svgUrl = URL.createObjectURL(svgBlob);
+          const img = new Image();
+          await new Promise((res, rej) => {
+            img.onload = res;
+            img.onerror = rej;
+            img.src = svgUrl;
+          });
 
-/* ---------------- скріншот / поділитися ---------------- */
-function roundRectPath(ctx,x,y,w,h,r){
-  ctx.beginPath();
-  ctx.moveTo(x+r,y);
-  ctx.arcTo(x+w,y,x+w,y+h,r);
-  ctx.arcTo(x+w,y+h,x,y+h,r);
-  ctx.arcTo(x,y+h,x,y,r);
-  ctx.arcTo(x,y,x+w,y,r);
-  ctx.closePath();
-}
+          const W = 1080,
+            PAD = 44;
+          const mapW = W - PAD * 2;
+          const mapH = mapW * (MAP_H / MAP_W);
+          const titleH = 46,
+            subtitleH = 30,
+            legendH = 34,
+            gapS = 16;
+          const H =
+            PAD + titleH + subtitleH + gapS + legendH + gapS + mapH + PAD;
 
-function svgToStandaloneString(svgEl){
-  const clone = svgEl.cloneNode(true);
-  const origAll = svgEl.querySelectorAll("*");
-  const cloneAll = clone.querySelectorAll("*");
-  const props = ["fill","stroke","stroke-width","stroke-linejoin","paint-order","font-family","font-size","font-weight","text-anchor","opacity"];
-  origAll.forEach((el,i)=>{
-    const cs = getComputedStyle(el);
-    const target = cloneAll[i];
-    if(!target) return;
-    props.forEach(p=>{
-      const v = cs.getPropertyValue(p);
-      if(v) target.style.setProperty(p, v);
-    });
-  });
-  clone.setAttribute("xmlns","http://www.w3.org/2000/svg");
-  const bg = document.createElementNS(NS,"rect");
-  bg.setAttribute("x","0"); bg.setAttribute("y","0");
-  bg.setAttribute("width", String(MAP_W)); bg.setAttribute("height", String(MAP_H));
-  bg.setAttribute("fill", getComputedStyle(document.getElementById("plate")).backgroundColor || "#F5F6F2");
-  clone.insertBefore(bg, clone.firstChild);
-  return new XMLSerializer().serializeToString(clone);
-}
+          const canvas = document.createElement("canvas");
+          const dpr = 2;
+          canvas.width = W * dpr;
+          canvas.height = H * dpr;
+          const ctx = canvas.getContext("2d");
+          ctx.scale(dpr, dpr);
 
-async function buildShareCanvas(){
-  try{ await document.fonts.ready; }catch(e){}
+          ctx.fillStyle = "#F5F6F2";
+          roundRectPath(ctx, 0, 0, W, H, 14);
+          ctx.fill();
+          ctx.strokeStyle = "#131A1E";
+          ctx.lineWidth = 1.4;
+          roundRectPath(ctx, 0.7, 0.7, W - 1.4, H - 1.4, 14);
+          ctx.stroke();
 
-  const svgString = svgToStandaloneString(svg);
-  const svgBlob = new Blob([svgString], {type:"image/svg+xml;charset=utf-8"});
-  const svgUrl = URL.createObjectURL(svgBlob);
-  const img = new Image();
-  await new Promise((res,rej)=>{ img.onload=res; img.onerror=rej; img.src=svgUrl; });
+          ctx.fillStyle = "#131A1E";
+          ctx.font = "800 32px Unbounded, Onest, sans-serif";
+          ctx.fillText("Моя мапа України", PAD, PAD + 32);
 
-  const W = 1080, PAD = 44;
-  const mapW = W - PAD*2;
-  const mapH = mapW * (MAP_H / MAP_W);
-  const titleH = 46, subtitleH = 30, legendH = 34, gapS = 16;
-  const H = PAD + titleH + subtitleH + gapS + legendH + gapS + mapH + PAD;
+          const counts = getCounts();
+          const total = REGIONS.length;
+          const visited = counts.home + counts.been + counts.transit;
+          const pct = Math.round((visited / total) * 100);
+          ctx.font = "600 18px Onest, sans-serif";
+          ctx.fillStyle = "#5C6862";
+          ctx.fillText(
+            `${pct}% де я вже бував · ${total} регіонів`,
+            PAD,
+            PAD + titleH + subtitleH - 6,
+          );
 
-  const canvas = document.createElement("canvas");
-  const dpr = 2;
-  canvas.width = W*dpr; canvas.height = H*dpr;
-  const ctx = canvas.getContext("2d");
-  ctx.scale(dpr,dpr);
+          let lx = PAD;
+          const ly = PAD + titleH + subtitleH + gapS;
+          const sq = 16;
+          ctx.font = "600 14px Onest, sans-serif";
+          STATUSES.forEach((s) => {
+            ctx.fillStyle = COLORS[s.id];
+            roundRectPath(ctx, lx, ly, sq, sq, 3);
+            ctx.fill();
+            ctx.fillStyle = "#131A1E";
+            const label = `${s.label} · ${counts[s.id]}`;
+            ctx.fillText(label, lx + sq + 7, ly + sq - 3);
+            lx += sq + 7 + ctx.measureText(label).width + 26;
+          });
 
-  ctx.fillStyle = "#F5F6F2";
-  roundRectPath(ctx,0,0,W,H,14); ctx.fill();
-  ctx.strokeStyle = "#131A1E"; ctx.lineWidth = 1.4;
-  roundRectPath(ctx,0.7,0.7,W-1.4,H-1.4,14); ctx.stroke();
+          const my = ly + legendH + gapS;
+          ctx.drawImage(img, PAD, my, mapW, mapH);
 
-  ctx.fillStyle = "#131A1E";
-  ctx.font = "800 32px Unbounded, Onest, sans-serif";
-  ctx.fillText("Моя мапа України", PAD, PAD + 32);
+          URL.revokeObjectURL(svgUrl);
+          return canvas;
+        }
 
-  const counts = getCounts();
-  const total = REGIONS.length;
-  const visited = counts.home + counts.been + counts.transit;
-  const pct = Math.round(visited/total*100);
-  ctx.font = "600 18px Onest, sans-serif";
-  ctx.fillStyle = "#5C6862";
-  ctx.fillText(`${pct}% де я вже бував · ${total} регіонів`, PAD, PAD + titleH + subtitleH - 6);
+        function downloadCanvas(canvas) {
+          canvas.toBlob((blob) => {
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = "moya-mapa-ukrainy.png";
+            a.click();
+            setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+          }, "image/png");
+        }
 
-  let lx = PAD;
-  const ly = PAD + titleH + subtitleH + gapS;
-  const sq = 16;
-  ctx.font = "600 14px Onest, sans-serif";
-  STATUSES.forEach(s=>{
-    ctx.fillStyle = COLORS[s.id];
-    roundRectPath(ctx, lx, ly, sq, sq, 3); ctx.fill();
-    ctx.fillStyle = "#131A1E";
-    const label = `${s.label} · ${counts[s.id]}`;
-    ctx.fillText(label, lx+sq+7, ly+sq-3);
-    lx += sq + 7 + ctx.measureText(label).width + 26;
-  });
+        document
+          .getElementById("btnShot")
+          .addEventListener("click", async () => {
+            try {
+              const canvas = await buildShareCanvas();
+              downloadCanvas(canvas);
+              toast("Зображення збережено");
+            } catch (e) {
+              toast("Не вдалося створити зображення");
+            }
+          });
 
-  const my = ly + legendH + gapS;
-  ctx.drawImage(img, PAD, my, mapW, mapH);
+        document
+          .getElementById("btnShare")
+          .addEventListener("click", async () => {
+            try {
+              const canvas = await buildShareCanvas();
+              const blob = await new Promise((res) =>
+                canvas.toBlob(res, "image/png"),
+              );
+              const file = new File([blob], "moya-mapa-ukrainy.png", {
+                type: "image/png",
+              });
+              if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                await navigator.share({
+                  files: [file],
+                  title: "Моя мапа України",
+                  text: "Ось де я вже побував в Україні",
+                });
+              } else if (navigator.share) {
+                await navigator.share({
+                  title: "Моя мапа України",
+                  text: "Ось де я вже побував в Україні",
+                  url: location.href,
+                });
+                downloadCanvas(canvas);
+                toast(
+                  "Браузер не підтримує ділитися зображенням — воно завантажено окремо",
+                );
+              } else {
+                downloadCanvas(canvas);
+                toast(
+                  "Цей браузер не підтримує «Поділитися» — зображення завантажено, поділись ним вручну",
+                );
+              }
+            } catch (e) {
+              if (e && e.name === "AbortError") return;
+              toast("Не вдалося поділитися");
+            }
+          });
 
-  URL.revokeObjectURL(svgUrl);
-  return canvas;
-}
+        document.getElementById("btnLink").addEventListener("click", () => {
+          const url =
+            location.origin +
+            location.pathname +
+            location.search +
+            "#s=" +
+            toCode();
+          const box = document.getElementById("link");
+          box.style.display = "block";
+          box.value = url;
+          box.select();
+          let copied = false;
+          try {
+            copied = document.execCommand("copy");
+          } catch (e) {}
+          if (navigator.clipboard && !copied) {
+            navigator.clipboard
+              .writeText(url)
+              .then(() => toast("Посилання скопійовано"))
+              .catch(() => toast("Скопіюйте посилання нижче"));
+          } else {
+            toast(
+              copied ? "Посилання скопійовано" : "Скопіюйте посилання нижче",
+            );
+          }
+        });
 
-function downloadCanvas(canvas){
-  canvas.toBlob(blob=>{
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "moya-mapa-ukrainy.png";
-    a.click();
-    setTimeout(()=>URL.revokeObjectURL(a.href), 1000);
-  }, "image/png");
-}
+        document.getElementById("btnReset").addEventListener("click", () => {
+          if (!confirm("Позначити всі 27 регіонів як «не був»?")) return;
+          REGIONS.forEach((r) => (state[r.id] = "none"));
+          render();
+          save();
+          toast("Мапу очищено");
+        });
 
-document.getElementById("btnShot").addEventListener("click", async ()=>{
-  try{
-    const canvas = await buildShareCanvas();
-    downloadCanvas(canvas);
-    toast("Зображення збережено");
-  }catch(e){
-    toast("Не вдалося створити зображення");
-  }
-});
+        /* ---------------- запуск ---------------- */
+        buildRibbon();
+        buildMap();
+        buildList();
+        setBrush("been");
 
-document.getElementById("btnShare").addEventListener("click", async ()=>{
-  try{
-    const canvas = await buildShareCanvas();
-    const blob = await new Promise(res=> canvas.toBlob(res, "image/png"));
-    const file = new File([blob], "moya-mapa-ukrainy.png", {type:"image/png"});
-    if(navigator.canShare && navigator.canShare({files:[file]})){
-      await navigator.share({files:[file], title:"Моя мапа України", text:"Ось де я вже побував в Україні"});
-    }else if(navigator.share){
-      await navigator.share({title:"Моя мапа України", text:"Ось де я вже побував в Україні", url: location.href});
-      downloadCanvas(canvas);
-      toast("Браузер не підтримує ділитися зображенням — воно завантажено окремо");
-    }else{
-      downloadCanvas(canvas);
-      toast("Цей браузер не підтримує «Поділитися» — зображення завантажено, поділись ним вручну");
-    }
-  }catch(e){
-    if(e && e.name === "AbortError") return;
-    toast("Не вдалося поділитися");
-  }
-});
-
-document.getElementById("btnLink").addEventListener("click", ()=>{
-  const url = location.origin + location.pathname + location.search + "#s=" + toCode();
-  const box = document.getElementById("link");
-  box.style.display = "block";
-  box.value = url;
-  box.select();
-  let copied = false;
-  try{ copied = document.execCommand("copy"); }catch(e){}
-  if(navigator.clipboard && !copied){
-    navigator.clipboard.writeText(url).then(()=>toast("Посилання скопійовано")).catch(()=>toast("Скопіюйте посилання нижче"));
-  }else{
-    toast(copied ? "Посилання скопійовано" : "Скопіюйте посилання нижче");
-  }
-});
-
-document.getElementById("btnReset").addEventListener("click", ()=>{
-  if(!confirm("Позначити всі 27 регіонів як «не був»?")) return;
-  REGIONS.forEach(r=> state[r.id] = "none");
-  render(); save(); toast("Мапу очищено");
-});
-
-/* ---------------- запуск ---------------- */
-buildRibbon();
-buildMap();
-buildList();
-setBrush("been");
-
-(async ()=>{
-  if(fromHash()){ render(); await save(); }
-  else { await load(); render(); }
-})();
-
-})();
-</script>
-</body>
+        (async () => {
+          if (fromHash()) {
+            render();
+            await save();
+          } else {
+            await load();
+            render();
+          }
+        })();
+      })();
+    </script>
+  </body>
 </html>
