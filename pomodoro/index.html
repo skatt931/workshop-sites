@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ритм воркшопу — Pomodoro</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23101510'/%3E%3Cpath d='M15 42 28 14h8l13 28h-9l-2-6H26l-2 6Zm14-13h7l-3.5-10Z' fill='%23d8ff4f'/%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#таймер" aria-label="Ритм воркшопу, на початок">
+          <span class="brand-mark">AI</span>
+          <span>РИТМ<br />ВОРКШОПУ</span>
+        </a>
+        <div class="session-counter" aria-live="polite">
+          <span class="counter-label">Блоків завершено</span>
+          <strong id="sessionCount">00</strong>
+        </div>
+      </header>
+
+      <section class="timer-stage" id="таймер" aria-labelledby="blockTitle">
+        <p class="eyebrow"><span class="status-dot" id="statusDot"></span><span id="statusText">ГОТОВІ ДО СТАРТУ</span></p>
+        <h1 id="blockTitle">Вступ і результат дня</h1>
+        <p class="block-description" id="blockDescription">Знайомимось, дивимось на готовий приклад і задаємо напрямок дня.</p>
+
+        <div class="clock-wrap" aria-label="Залишилося часу">
+          <svg class="clock" viewBox="0 0 320 320" role="img" aria-label="Круговий прогрес таймера">
+            <circle class="clock-track" cx="160" cy="160" r="139"></circle>
+            <circle class="clock-progress" id="progressRing" cx="160" cy="160" r="139"></circle>
+          </svg>
+          <div class="clock-content">
+            <time id="timeDisplay" datetime="PT15M">15:00</time>
+            <span class="clock-caption" id="clockCaption">З 15 хвилин</span>
+          </div>
+        </div>
+
+        <div class="controls" aria-label="Керування таймером">
+          <button class="button button-primary" id="startButton" type="button">Старт <span>↗</span></button>
+          <button class="button button-secondary" id="pauseButton" type="button" disabled>Пауза</button>
+          <button class="button button-quiet" id="resetButton" type="button">Скинути</button>
+        </div>
+      </section>
+
+      <section class="mode-section" aria-labelledby="modesTitle">
+        <div class="section-heading">
+          <p class="eyebrow">ОБЕРІТЬ БЛОК</p>
+          <h2 id="modesTitle">Програма воркшопу</h2>
+        </div>
+        <div class="modes" role="list">
+          <button class="mode-card is-active" type="button" data-mode="intro" role="listitem" aria-pressed="true"><span class="mode-number">01</span><span class="mode-name">Вступ і результат дня</span><strong>15 <small>хв</small></strong><span class="mode-arrow">↗</span></button>
+          <button class="mode-card" type="button" data-mode="html" role="listitem" aria-pressed="false"><span class="mode-number">02</span><span class="mode-name">Вебсайт і HTML</span><strong>20 <small>хв</small></strong><span class="mode-arrow">↗</span></button>
+          <button class="mode-card" type="button" data-mode="product" role="listitem" aria-pressed="false"><span class="mode-number">03</span><span class="mode-name">Як створюють продукт</span><strong>15 <small>хв</small></strong><span class="mode-arrow">↗</span></button>
+          <button class="mode-card" type="button" data-mode="codex" role="listitem" aria-pressed="false"><span class="mode-number">04</span><span class="mode-name">Codex і скіли</span><strong>20 <small>хв</small></strong><span class="mode-arrow">↗</span></button>
+          <button class="mode-card" type="button" data-mode="github" role="listitem" aria-pressed="false"><span class="mode-number">05</span><span class="mode-name">Git і GitHub</span><strong>20 <small>хв</small></strong><span class="mode-arrow">↗</span></button>
+          <button class="mode-card" type="button" data-mode="build" role="listitem" aria-pressed="false"><span class="mode-number">06</span><span class="mode-name">Основа сайту й дизайн</span><strong>60 <small>хв</small></strong><span class="mode-arrow">↗</span></button>
+          <button class="mode-card" type="button" data-mode="break" role="listitem" aria-pressed="false"><span class="mode-number">07</span><span class="mode-name">Перерва</span><strong>15 <small>хв</small></strong><span class="mode-arrow">↗</span></button>
+          <button class="mode-card" type="button" data-mode="personalize" role="listitem" aria-pressed="false"><span class="mode-number">08</span><span class="mode-name">Персоналізація й тестування</span><strong>60 <small>хв</small></strong><span class="mode-arrow">↗</span></button>
+          <button class="mode-card" type="button" data-mode="release" role="listitem" aria-pressed="false"><span class="mode-number">09</span><span class="mode-name">Реліз на GitHub Pages</span><strong>45 <small>хв</small></strong><span class="mode-arrow">↗</span></button>
+          <button class="mode-card" type="button" data-mode="own-change" role="listitem" aria-pressed="false"><span class="mode-number">10</span><span class="mode-name">Власна зміна й завершення</span><strong>30 <small>хв</small></strong><span class="mode-arrow">↗</span></button>
+        </div>
+      </section>
+    </main>
+
+    <div class="completion-message" id="completionMessage" role="alert" aria-live="assertive" hidden>
+      <span>ЧАС ВИЙШОВ</span>
+      <strong id="completionTitle">Чудова робота!</strong>
+      <button id="closeMessage" type="button" aria-label="Закрити повідомлення">×</button>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,1005 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0d1110">
+  <title>Перший сайт з Codex — воркшоп</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230d1110'/%3E%3Cpath d='M16 18h32v8H25v12h23v8H16z' fill='%23d9ff45'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      --ink: #0d1110;
+      --ink-soft: #151b19;
+      --paper: #f4f1e8;
+      --muted: #aeb5ae;
+      --line: rgba(244, 241, 232, 0.16);
+      --lime: #d9ff45;
+      --coral: #ff7659;
+      --cyan: #66e9ee;
+      --display: Georgia, "Times New Roman", serif;
+      --body: "Avenir Next", "Segoe UI", sans-serif;
+      --mono: "SFMono-Regular", "Cascadia Code", Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body { margin: 0; min-height: 100%; }
+
+    body {
+      min-height: 100svh;
+      overflow: hidden;
+      color: var(--paper);
+      background:
+        radial-gradient(circle at 88% -12%, rgba(217,255,69,.12), transparent 31%),
+        radial-gradient(circle at -8% 110%, rgba(102,233,238,.09), transparent 34%),
+        var(--ink);
+      font-family: var(--body);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .22;
+      background-image:
+        linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+      background-size: 56px 56px;
+      mask-image: linear-gradient(to bottom, black, transparent 94%);
+    }
+
+    button { font: inherit; }
+
+    .deck {
+      width: min(1440px, calc(100% - 64px));
+      height: 100svh;
+      margin: 0 auto;
+      padding: 24px 0 20px;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .topbar,
+    .bottombar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: .7rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .topbar { padding-bottom: 16px; border-bottom: 1px solid var(--line); }
+    .bottombar { padding-top: 14px; border-top: 1px solid var(--line); }
+
+    .brand {
+      color: var(--paper);
+      font-family: var(--display);
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -.03em;
+      text-transform: none;
+    }
+
+    .brand span,
+    .counter { color: var(--lime); }
+
+    .counter {
+      padding: 5px 8px;
+      border: 1px solid transparent;
+      background: transparent;
+      cursor: pointer;
+      font-family: var(--mono);
+      font-size: inherit;
+      letter-spacing: inherit;
+      transition: border-color .18s ease, background .18s ease;
+    }
+
+    .counter:hover,
+    .counter:focus-visible {
+      outline: none;
+      border-color: var(--lime);
+      background: rgba(190, 242, 100, .08);
+    }
+
+    .progress {
+      width: min(28vw, 300px);
+      height: 5px;
+      background: rgba(244,241,232,.1);
+      overflow: hidden;
+    }
+
+    .progress i {
+      display: block;
+      width: 0;
+      height: 100%;
+      background: linear-gradient(90deg, var(--lime), var(--cyan));
+      transition: width .35s ease;
+    }
+
+    #app {
+      min-height: 0;
+      position: relative;
+      display: grid;
+      align-items: center;
+      padding: clamp(24px, 5vh, 64px) 0;
+    }
+
+    .slide {
+      width: min(1180px, 100%);
+      animation: enter .38s ease both;
+      position: relative;
+    }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      color: var(--lime);
+      font-family: var(--mono);
+      font-size: clamp(.66rem, 1vw, .78rem);
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 38px;
+      height: 1px;
+      background: currentColor;
+    }
+
+    h1 {
+      max-width: 1040px;
+      margin: 0;
+      white-space: pre-line;
+      font-family: var(--display);
+      font-size: clamp(2.6rem, 5.8vw, 6.2rem);
+      font-weight: 600;
+      line-height: .98;
+      letter-spacing: -.035em;
+      text-wrap: balance;
+    }
+
+    .subhead {
+      max-width: 860px;
+      margin: 22px 0 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 1.6vw, 1.28rem);
+      line-height: 1.5;
+      white-space: pre-line;
+      text-wrap: balance;
+    }
+
+    .content { margin-top: clamp(24px, 4vh, 42px); }
+
+    .flow {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 13px;
+      max-width: 1120px;
+    }
+
+    .flow span {
+      color: var(--paper);
+      font-family: var(--display);
+      font-size: clamp(1.2rem, 2vw, 1.75rem);
+    }
+
+    .flow b {
+      color: var(--coral);
+      font-size: clamp(1.2rem, 2vw, 1.8rem);
+      font-weight: 400;
+    }
+
+    .lines {
+      width: min(920px, 100%);
+      border-top: 1px solid var(--line);
+    }
+
+    .line {
+      display: grid;
+      grid-template-columns: minmax(150px, .8fr) minmax(260px, 1.7fr);
+      gap: 24px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--line);
+      align-items: baseline;
+    }
+
+    .line strong {
+      color: var(--paper);
+      font-family: var(--display);
+      font-size: clamp(1.05rem, 1.7vw, 1.45rem);
+      font-weight: 600;
+    }
+
+    .line span {
+      color: var(--muted);
+      font-size: clamp(.92rem, 1.3vw, 1.08rem);
+      line-height: 1.42;
+    }
+
+    .checklist {
+      width: min(900px, 100%);
+      display: grid;
+      gap: 12px;
+    }
+
+    .check {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 14px;
+      align-items: center;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+      color: var(--paper);
+      font-size: clamp(1.05rem, 1.75vw, 1.45rem);
+    }
+
+    .check::before {
+      content: "✓";
+      display: grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      border: 1px solid var(--lime);
+      border-radius: 50%;
+      color: var(--lime);
+      font-family: var(--mono);
+      font-size: .72rem;
+    }
+
+    .prompt {
+      width: min(1020px, 100%);
+      padding: clamp(20px, 3vw, 34px);
+      border-left: 4px solid var(--lime);
+      background: rgba(244,241,232,.055);
+      box-shadow: inset 0 0 0 1px var(--line);
+      font-family: var(--mono);
+      font-size: clamp(.94rem, 1.45vw, 1.23rem);
+      line-height: 1.6;
+      white-space: pre-line;
+    }
+
+    .prompt mark {
+      padding: .05em .22em;
+      color: var(--ink);
+      background: var(--lime);
+      border-radius: 2px;
+    }
+
+    .callout {
+      max-width: 880px;
+      padding-left: 20px;
+      border-left: 3px solid var(--coral);
+      color: var(--paper);
+      font-family: var(--display);
+      font-size: clamp(1.35rem, 2.4vw, 2.1rem);
+      line-height: 1.25;
+      white-space: pre-line;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: minmax(320px, .9fr) minmax(380px, 1.25fr);
+      gap: clamp(28px, 5vw, 66px);
+      align-items: center;
+    }
+
+    .result-grid .checklist { width: 100%; }
+
+    .result-shot {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      object-position: top;
+      border: 1px solid var(--line);
+      box-shadow: 15px 15px 0 rgba(102,233,238,.12);
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .gallery figure {
+      min-width: 0;
+      margin: 0;
+      border: 1px solid var(--line);
+      background: rgba(244,241,232,.04);
+    }
+
+    .gallery img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      object-position: top;
+    }
+
+    .gallery figcaption {
+      padding: 10px 12px;
+      color: var(--paper);
+      font-family: var(--mono);
+      font-size: clamp(.62rem, .85vw, .76rem);
+      letter-spacing: .04em;
+    }
+
+    .profile {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(230px, 360px);
+      gap: clamp(32px, 7vw, 96px);
+      align-items: center;
+    }
+
+    .profile h1 { font-size: clamp(3.4rem, 6.3vw, 6.7rem); }
+
+    .profile img {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+      object-position: center 28%;
+      border: 1px solid var(--line);
+      box-shadow: 16px 16px 0 rgba(102,233,238,.14);
+    }
+
+    .profile .facts { margin-top: 26px; }
+
+    .profile .facts div {
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      font-size: clamp(.98rem, 1.4vw, 1.17rem);
+    }
+
+    .profile .facts div::before {
+      content: "/";
+      margin-right: 11px;
+      color: var(--lime);
+      font-family: var(--mono);
+    }
+
+    .slide.divider h1 { max-width: 900px; }
+
+    .slide.divider h1::after {
+      content: "";
+      display: block;
+      width: clamp(80px, 11vw, 150px);
+      height: 9px;
+      margin-top: 28px;
+      background: var(--coral);
+      transform: rotate(-1.5deg);
+    }
+
+    .slide.final h1 { max-width: 980px; }
+    .slide.final .eyebrow { color: var(--cyan); }
+
+    .watermark {
+      position: fixed;
+      right: clamp(26px, 5vw, 78px);
+      bottom: clamp(70px, 10vh, 118px);
+      color: rgba(217,255,69,.07);
+      font-family: var(--display);
+      font-size: clamp(9rem, 24vw, 23rem);
+      font-weight: 700;
+      line-height: .72;
+      letter-spacing: -.12em;
+      pointer-events: none;
+      user-select: none;
+      z-index: -1;
+    }
+
+    .nav { display: flex; gap: 9px; }
+
+    .nav button {
+      min-width: 104px;
+      padding: 10px 14px;
+      border: 1px solid var(--line);
+      color: var(--paper);
+      background: rgba(21,27,25,.76);
+      cursor: pointer;
+      font-family: var(--display);
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+
+    .nav button:last-child {
+      color: var(--ink);
+      border-color: var(--lime);
+      background: var(--lime);
+    }
+
+    .nav button:hover:not(:disabled),
+    .nav button:focus-visible {
+      outline: none;
+      transform: translateY(-2px);
+      border-color: var(--cyan);
+    }
+
+    .nav button:disabled { opacity: .3; cursor: default; }
+
+    .hint kbd {
+      padding: 2px 5px;
+      border: 1px solid var(--line);
+      color: var(--paper);
+      font-family: var(--mono);
+    }
+
+    .jump-dialog {
+      width: min(440px, calc(100% - 32px));
+      padding: 0;
+      border: 1px solid var(--line);
+      color: var(--paper);
+      background: var(--ink);
+      box-shadow: 0 28px 90px rgba(0, 0, 0, .58);
+    }
+
+    .jump-dialog::backdrop {
+      background: rgba(4, 7, 6, .78);
+      backdrop-filter: blur(5px);
+    }
+
+    .jump-panel { padding: 28px; }
+
+    .jump-kicker {
+      margin-bottom: 8px;
+      color: var(--lime);
+      font-family: var(--mono);
+      font-size: .7rem;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    .jump-panel label {
+      display: block;
+      margin-bottom: 18px;
+      font-family: var(--display);
+      font-size: clamp(1.55rem, 5vw, 2.15rem);
+      font-weight: 700;
+      letter-spacing: -.04em;
+    }
+
+    .jump-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+    }
+
+    .jump-row input {
+      min-width: 0;
+      padding: 13px 14px;
+      border: 1px solid var(--line);
+      border-radius: 0;
+      outline: none;
+      color: var(--paper);
+      background: rgba(244, 241, 232, .06);
+      font-family: var(--mono);
+      font-size: 1rem;
+    }
+
+    .jump-row input:focus { border-color: var(--cyan); }
+
+    .jump-row button,
+    .jump-close {
+      padding: 12px 16px;
+      border: 1px solid var(--lime);
+      color: var(--ink);
+      background: var(--lime);
+      cursor: pointer;
+      font-family: var(--display);
+      font-weight: 700;
+    }
+
+    .jump-close {
+      margin-top: 18px;
+      padding: 0;
+      border: 0;
+      color: var(--muted);
+      background: transparent;
+      font-family: var(--mono);
+      font-size: .72rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .jump-help {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: .72rem;
+    }
+
+    @keyframes enter {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-height: 820px) and (min-width: 760px) {
+      #app { padding: 20px 0; }
+      h1 { font-size: clamp(2.3rem, 5vw, 4.8rem); }
+      .content { margin-top: 20px; }
+      .line { padding: 9px 0; }
+      .check { padding-bottom: 8px; }
+      .prompt { font-size: clamp(.94rem, 1.35vw, 1.12rem); line-height: 1.4; }
+    }
+
+    @media (max-width: 760px) {
+      body { overflow: auto; }
+      .deck { width: min(100% - 30px, 1440px); min-height: 100svh; height: auto; }
+      .topbar .progress, .hint { display: none; }
+      #app { min-height: calc(100svh - 132px); padding: 28px 0; }
+      h1 { font-size: clamp(2.3rem, 10.5vw, 4.3rem); overflow-wrap: anywhere; }
+      .profile { grid-template-columns: 1fr; gap: 24px; }
+      .profile img { width: min(58vw, 260px); grid-row: 1; margin-left: auto; }
+      .result-grid { grid-template-columns: 1fr; }
+      .result-shot { display: none; }
+      .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .line { grid-template-columns: 1fr; gap: 5px; }
+      .flow { display: grid; width: 100%; gap: 8px; }
+      .flow b { display: none; }
+      .flow span { padding-bottom: 8px; border-bottom: 1px solid var(--line); overflow-wrap: anywhere; }
+      .prompt { overflow-wrap: anywhere; }
+      .watermark { display: none; }
+      .bottombar { align-items: flex-end; }
+      .nav button { min-width: auto; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="deck">
+    <header class="topbar">
+      <div class="brand">CODEX <span>/</span> ВОРКШОП</div>
+      <div class="progress" aria-hidden="true"><i id="progress"></i></div>
+      <button class="counter" id="counter" type="button" aria-haspopup="dialog" aria-controls="jump-dialog" title="Перейти до слайда — клавіша G">01 / 31</button>
+    </header>
+
+    <section id="app" aria-live="polite"></section>
+
+    <footer class="bottombar">
+      <div class="hint"><kbd>←</kbd> <kbd>→</kbd> · <kbd>G</kbd> перейти</div>
+      <nav class="nav" aria-label="Навігація презентацією">
+        <button id="prev" type="button">← Назад</button>
+        <button id="next" type="button">Далі →</button>
+      </nav>
+    </footer>
+  </main>
+
+  <dialog class="jump-dialog" id="jump-dialog" aria-labelledby="jump-title">
+    <form class="jump-panel" id="jump-form">
+      <div class="jump-kicker">Швидкий перехід</div>
+      <label id="jump-title" for="jump-input">До якого слайда?</label>
+      <div class="jump-row">
+        <input id="jump-input" type="number" min="1" max="31" inputmode="numeric" autocomplete="off" required aria-describedby="jump-help">
+        <button type="submit">Перейти</button>
+      </div>
+      <p class="jump-help" id="jump-help">Введіть номер від 1 до 31 і натисніть Enter.</p>
+      <button class="jump-close" id="jump-close" type="button">Закрити · Esc</button>
+    </form>
+  </dialog>
+
+  <script>
+    const slides = [
+      {
+        eyebrow: 'Перший сайт з Codex',
+        title: 'Створи й опублікуй\nсвій перший сайт',
+        subhead: 'за допомогою Codex',
+        type: 'divider'
+      },
+      {
+        eyebrow: 'Хто сьогодні з вами',
+        title: 'Ігор Курницький',
+        type: 'profile',
+        facts: ['11 років у веброзробці', 'Senior Software Engineer', 'фотографія · акторство · настільні ігри']
+      },
+      {
+        eyebrow: 'Результат дня',
+        title: 'Наприкінці у вас буде',
+        type: 'result',
+        items: ['сайт на ноутбуці', 'репозиторій у GitHub', 'публічне посилання'],
+        image: 'assets/examples/demo-site.png',
+        alt: 'Демо односторінкового сайту Майже готово'
+      },
+      {
+        eyebrow: 'Маршрут',
+        title: 'Як пройде воркшоп',
+        type: 'flow',
+        items: ['зрозуміти', 'спланувати', 'створити', 'перевірити', 'опублікувати']
+      },
+      {
+        eyebrow: 'Спільний старт',
+        title: 'Перед першою вправою',
+        type: 'checklist',
+        items: ['ChatGPT і Codex відкриваються', 'GitHub відкривається', 'груповий чат відкритий'],
+        subhead: '✅ — готово · 🟡 — уже допомагаємо. Рухаємося далі, коли готові всі.'
+      },
+      {
+        eyebrow: 'Веб без магії',
+        title: 'З чого складається вебсторінка',
+        type: 'lines',
+        items: [
+          ['HTML', 'зміст і структура'],
+          ['CSS', 'вигляд і розміщення'],
+          ['JavaScript', 'поведінка'],
+          ['Браузер', 'збирає файли у видиму сторінку']
+        ],
+        subhead: 'HTML — скелет, CSS — одяг, JavaScript — те, що змушує кнопку щось зробити.'
+      },
+      {
+        eyebrow: 'Два типи вебу',
+        title: 'Статична й динамічна сторінка',
+        type: 'lines',
+        items: [
+          ['Статична', 'браузер отримує готові HTML, CSS і JavaScript-файли'],
+          ['Динамічна', 'сервер створює або змінює дані для запиту чи користувача']
+        ],
+        subhead: 'Сьогодні створюємо статичний сайт. Він може мати JavaScript та інтерактивність.'
+      },
+      {
+        eyebrow: 'Від файлу до посилання',
+        title: 'Локальний сайт, хостинг і URL',
+        type: 'flow',
+        items: ['файли на ноутбуці', 'хостинг віддає їх браузеру', 'URL веде на сторінку'],
+        subhead: 'Локально — бачите ви. Публічно — сторінка відкривається за вебадресою.'
+      },
+      {
+        eyebrow: 'Не тільки код',
+        title: 'Codex працює не тільки з кодом',
+        type: 'lines',
+        items: [
+          ['Файли', 'читати й змінювати дозволені локальні матеріали'],
+          ['Матеріали', 'створювати документи та презентації'],
+          ['Браузер', 'відкривати сторінки й перевіряти результат'],
+          ['Сервіси', 'працювати з підключеними інструментами']
+        ],
+        subhead: 'Можливості залежать від доступів і підтверджень.'
+      },
+      {
+        eyebrow: 'Людина + Codex',
+        title: 'Ви керуєте результатом',
+        type: 'flow',
+        items: ['попросити', 'подивитися', 'уточнити', 'перевірити'],
+        subhead: 'Codex змінює файли. Рішення приймаєте ви. Промпт — не заклинання.'
+      },
+      {
+        eyebrow: 'Перед першим запитом',
+        title: 'Структура зрозумілого промпту',
+        type: 'lines',
+        items: [
+          ['Мета', 'що створити?'],
+          ['Контекст', 'для кого й навіщо?'],
+          ['Результат', 'що має з’явитися?'],
+          ['Межі', 'чого поки не робити?']
+        ]
+      },
+      {
+        eyebrow: 'Перша власна вправа',
+        title: 'Напишіть запит на план сайту',
+        type: 'prompt',
+        prompt: 'Я хочу створити [який сайт].\n\nВін потрібен для [кого і навіщо].\n\nНа сторінці відвідувач має\n[що зрозуміти або зробити].\n\nЗапропонуй 4–6 блоків сторінки.\nПоки що не створюй код.'
+      },
+      {
+        eyebrow: 'План до коду',
+        title: 'Перевірте план до створення сайту',
+        type: 'checklist',
+        items: ['Для кого цей сайт?', 'Що людина зрозуміє за 10 секунд?', 'Яку дію вона зможе зробити?', 'Чи немає зайвих блоків?']
+      },
+      {
+        eyebrow: 'Візуальний напрям',
+        title: 'Дизайн починається з напряму',
+        type: 'lines',
+        items: [
+          ['Настрій', 'яке відчуття має створювати сайт'],
+          ['Кольори', 'спокійні, яскраві, контрастні або нейтральні'],
+          ['Типографіка', 'стримана, дружня, редакційна або технічна'],
+          ['Референс', 'приклад напряму, а не об’єкт для копіювання']
+        ],
+        subhead: 'Оберіть 3–4 орієнтири. Не копіюємо — пояснюємо напрям.'
+      },
+      {
+        eyebrow: 'Головна вправа',
+        title: 'Напишіть промпт на створення сайту',
+        type: 'prompt',
+        prompt: 'Створи односторінковий сайт про [тема].\n\nДля [аудиторія].\nГоловна дія: [що має зробити відвідувач].\n\nБлоки: [4–6 блоків із плану].\nСтиль: [3–4 характеристики].\n\nВикористай HTML і CSS.\nJavaScript — лише якщо справді потрібен.\nНе додавай [що не потрібно].\n\nПісля створення скажи, які файли з’явилися і що перевірити.'
+      },
+      {
+        eyebrow: 'Розумний масштаб',
+        title: 'Перша версія має бути малою й завершеною',
+        type: 'checklist',
+        items: ['чітка головна думка', '4–6 змістовних блоків', 'зрозуміла наступна дія', 'акуратний вигляд на телефоні']
+      },
+      {
+        eyebrow: 'Практика',
+        title: 'Створіть першу версію',
+        type: 'lines',
+        items: [
+          ['1', 'допишіть власний промпт'],
+          ['2', 'надішліть його Codex'],
+          ['3', 'дочекайтеся створення файлів']
+        ],
+        subhead: 'Готово, коли сайт відкривається.'
+      },
+      {
+        eyebrow: 'Перший перегляд',
+        title: 'Відкрийте сайт як відвідувач',
+        type: 'callout',
+        callout: 'Спочатку подивіться на результат.\n\nПотім знайдіть:\nзаголовок · блоки · головну дію'
+      },
+      {
+        eyebrow: 'Пауза',
+        title: 'Перерва',
+        type: 'divider',
+        subhead: 'Після неї перевіримо, змінимо й опублікуємо сайт.\nІ ні — за перерву не треба додавати ще 12 секцій.'
+      },
+      {
+        eyebrow: 'Погляд відвідувача',
+        title: 'Перевірте сайт як відвідувач',
+        type: 'checklist',
+        items: ['За 10 секунд зрозуміло, що це за сайт?', 'Зрозуміло, для кого він і що робити далі?', 'Контакт безпечний, а кнопки працюють?', 'У вузькому вікні все читабельно?']
+      },
+      {
+        eyebrow: 'Одна контрольована зміна',
+        title: 'Попросіть про одну точну зміну',
+        type: 'prompt',
+        prompt: 'Зміни [що саме]\nу [якому місці].\n\nНовий текст або результат: [ваш варіант].\n\nНе змінюй [що треба зберегти].\nПісля зміни скажи, що перевірити.'
+      },
+      {
+        eyebrow: 'Критерій переходу',
+        title: 'Локальна версія готова до публікації',
+        type: 'checklist',
+        items: ['сайт відкривається', 'зміна перевірена', 'контакт безпечний', 'приватних даних немає'],
+        subhead: '✅ — готово · 🟡 — уже допомагаємо.'
+      },
+      {
+        eyebrow: 'Дві різні ролі',
+        title: 'GitHub зберігає, GitHub Pages показує',
+        type: 'lines',
+        items: [
+          ['GitHub', 'зберігає файли сайту'],
+          ['GitHub Pages', 'публікує статичні файли як вебсторінку']
+        ],
+        subhead: 'Серверний код GitHub Pages не запускає. Сьогодні все завантажуємо вручну.'
+      },
+      {
+        eyebrow: 'Перед публікацією',
+        title: 'Зупиніться на хвилину',
+        type: 'callout',
+        callout: 'Публічний сайт і файли репозиторію може відкрити будь-хто.\n\nНе публікуємо:\nпаролі · документи · приватні адреси · чужі матеріали'
+      },
+      {
+        eyebrow: 'Ручне завантаження',
+        title: 'Завантажте файли вручну',
+        type: 'lines',
+        items: [
+          ['1', 'GitHub → New repository'],
+          ['2', 'назва: first-site · Public'],
+          ['3', 'Add README → Create repository'],
+          ['4', 'Add file → Upload files']
+        ],
+        subhead: 'index.html має лежати в корені. Завантажте також CSS, JavaScript і зображення.'
+      },
+      {
+        eyebrow: 'Публікація',
+        title: 'Увімкніть GitHub Pages',
+        type: 'prompt',
+        prompt: 'Settings → Pages\n\nSource: Deploy from a branch\nBranch: main\nFolder: /(root)\n\nSave'
+      },
+      {
+        eyebrow: 'Вебадреса',
+        title: 'URL — адреса вашого сайту',
+        type: 'prompt',
+        prompt: 'https://ваше-ім’я.github.io/first-site/\n\nSettings → Pages → Visit site',
+        subhead: 'Перша публікація може потребувати кількох хвилин.'
+      },
+      {
+        eyebrow: 'Якщо сайт ще не відкрився',
+        title: 'Перевірте три речі',
+        type: 'checklist',
+        items: ['index.html у корені', 'main + /(root)', 'статус на сторінці Pages'],
+        subhead: 'Якщо немає стилів — перевірте шлях до CSS. Потім зачекайте кілька хвилин.\n404 — не оцінка воркшопу.'
+      },
+      {
+        eyebrow: 'Результат',
+        title: 'Сайт уже в інтернеті',
+        type: 'flow',
+        items: ['локальна версія', 'GitHub', 'публічний URL'],
+        subhead: 'Відкрийте посилання на іншому пристрої.'
+      },
+      {
+        eyebrow: 'Не кожну сторінку треба публікувати',
+        title: 'HTML-файл теж може бути інструментом',
+        type: 'gallery',
+        items: [
+          ['assets/examples/cv-generator.png', 'Генератор резюме'],
+          ['assets/examples/ai-quiz.png', 'Інтерактивний квіз'],
+          ['assets/examples/pomodoro.png', 'Pomodoro'],
+          ['assets/examples/demo-site.png', 'Сторінка проєкту']
+        ],
+        subhead: 'Локально: для себе. Публічно: коли хочете поділитися.'
+      },
+      {
+        eyebrow: 'Тепер цей шлях ваш',
+        title: 'Ідея → власний промпт → файли → перевірка → посилання',
+        type: 'final',
+        subhead: 'Наступний крок: зробіть одну корисну зміну завтра.'
+      }
+    ];
+
+    const app = document.querySelector('#app');
+    const counter = document.querySelector('#counter');
+    const progress = document.querySelector('#progress');
+    const prev = document.querySelector('#prev');
+    const next = document.querySelector('#next');
+    const jumpDialog = document.querySelector('#jump-dialog');
+    const jumpForm = document.querySelector('#jump-form');
+    const jumpInput = document.querySelector('#jump-input');
+    const jumpClose = document.querySelector('#jump-close');
+    let current = 0;
+    let touchStartX = 0;
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+
+    function promptHtml(value) {
+      return escapeHtml(value).replace(/\[([^\]]+)\]/g, '<mark>[$1]</mark>');
+    }
+
+    function flowHtml(items) {
+      return `<div class="flow">${items.map((item, index) => `${index ? '<b>→</b>' : ''}<span>${escapeHtml(item)}</span>`).join('')}</div>`;
+    }
+
+    function linesHtml(items) {
+      return `<div class="lines">${items.map(([label, text]) => `<div class="line"><strong>${escapeHtml(label)}</strong><span>${escapeHtml(text)}</span></div>`).join('')}</div>`;
+    }
+
+    function checklistHtml(items) {
+      return `<div class="checklist">${items.map(item => `<div class="check">${escapeHtml(item)}</div>`).join('')}</div>`;
+    }
+
+    function galleryHtml(items) {
+      return `<div class="gallery">${items.map(([src, caption]) => `<figure><img src="${escapeHtml(src)}" alt="${escapeHtml(caption)}"><figcaption>${escapeHtml(caption)}</figcaption></figure>`).join('')}</div>`;
+    }
+
+    function contentHtml(slide) {
+      if (slide.type === 'flow') return flowHtml(slide.items);
+      if (slide.type === 'lines') return linesHtml(slide.items);
+      if (slide.type === 'checklist') return checklistHtml(slide.items);
+      if (slide.type === 'result') return `<div class="result-grid">${checklistHtml(slide.items)}<img class="result-shot" src="${escapeHtml(slide.image)}" alt="${escapeHtml(slide.alt)}"></div>`;
+      if (slide.type === 'gallery') return galleryHtml(slide.items);
+      if (slide.type === 'prompt') return `<div class="prompt">${promptHtml(slide.prompt)}</div>`;
+      if (slide.type === 'callout') return `<div class="callout">${escapeHtml(slide.callout)}</div>`;
+      return '';
+    }
+
+    function render() {
+      const slide = slides[current];
+      const number = String(current + 1).padStart(2, '0');
+      const total = String(slides.length).padStart(2, '0');
+      const pct = ((current + 1) / slides.length) * 100;
+
+      counter.textContent = `${number} / ${total}`;
+      counter.setAttribute('aria-label', `Слайд ${current + 1} з ${slides.length}. Перейти до іншого слайда`);
+      progress.style.width = `${pct}%`;
+      prev.disabled = current === 0;
+      next.disabled = current === slides.length - 1;
+
+      if (slide.type === 'profile') {
+        app.innerHTML = `
+          <article class="slide profile">
+            <div>
+              <div class="eyebrow">${escapeHtml(slide.eyebrow)}</div>
+              <h1>${escapeHtml(slide.title)}</h1>
+              <div class="facts">${slide.facts.map(fact => `<div>${escapeHtml(fact)}</div>`).join('')}</div>
+            </div>
+            <img src="assets/ihor-kurnytskyi.jpg" alt="Ігор Курницький">
+          </article>
+          <div class="watermark" aria-hidden="true">${number}</div>`;
+      } else {
+        const classes = ['slide', slide.type === 'divider' ? 'divider' : '', slide.type === 'final' ? 'final' : ''].filter(Boolean).join(' ');
+        app.innerHTML = `
+          <article class="${classes}">
+            <div class="eyebrow">${escapeHtml(slide.eyebrow)}</div>
+            <h1>${escapeHtml(slide.title)}</h1>
+            ${slide.subhead ? `<p class="subhead">${escapeHtml(slide.subhead)}</p>` : ''}
+            ${contentHtml(slide) ? `<div class="content">${contentHtml(slide)}</div>` : ''}
+          </article>
+          <div class="watermark" aria-hidden="true">${number}</div>`;
+      }
+
+      history.replaceState(null, '', `#${current + 1}`);
+      document.title = `${current + 1}/${slides.length} · Перший сайт з Codex`;
+    }
+
+    function go(delta) {
+      const target = current + delta;
+      if (target < 0 || target >= slides.length) return;
+      current = target;
+      render();
+    }
+
+    function openJump() {
+      jumpInput.max = String(slides.length);
+      jumpInput.value = String(current + 1);
+      jumpDialog.showModal();
+      requestAnimationFrame(() => {
+        jumpInput.focus();
+        jumpInput.select();
+      });
+    }
+
+    function jumpTo(number) {
+      const target = Number(number);
+      if (!Number.isInteger(target) || target < 1 || target > slides.length) return false;
+      current = target - 1;
+      render();
+      return true;
+    }
+
+    prev.addEventListener('click', () => go(-1));
+    next.addEventListener('click', () => go(1));
+    counter.addEventListener('click', openJump);
+    jumpClose.addEventListener('click', () => jumpDialog.close());
+    jumpForm.addEventListener('submit', event => {
+      event.preventDefault();
+      if (jumpTo(jumpInput.value)) jumpDialog.close();
+      else jumpInput.reportValidity();
+    });
+    jumpDialog.addEventListener('click', event => {
+      if (event.target === jumpDialog) jumpDialog.close();
+    });
+
+    addEventListener('keydown', event => {
+      if (jumpDialog.open) return;
+      if (event.key.toLowerCase() === 'g') {
+        event.preventDefault();
+        openJump();
+        return;
+      }
+      if (['ArrowRight', ' ', 'PageDown'].includes(event.key)) {
+        event.preventDefault();
+        go(1);
+      }
+      if (['ArrowLeft', 'PageUp'].includes(event.key)) {
+        event.preventDefault();
+        go(-1);
+      }
+      if (event.key === 'Home') { current = 0; render(); }
+      if (event.key === 'End') { current = slides.length - 1; render(); }
+    });
+
+    addEventListener('touchstart', event => {
+      touchStartX = event.changedTouches[0].screenX;
+    }, { passive: true });
+
+    addEventListener('touchend', event => {
+      const distance = event.changedTouches[0].screenX - touchStartX;
+      if (Math.abs(distance) < 45) return;
+      go(distance < 0 ? 1 : -1);
+    }, { passive: true });
+
+    const fromHash = Number(location.hash.slice(1));
+    if (Number.isFinite(fromHash) && fromHash >= 1 && fromHash <= slides.length) {
+      current = fromHash - 1;
+    }
+
+    render();
+  </script>
+</body>
+</html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Майже готово — універсальний шаблон сайту</title>
+    <meta
+      name="description"
+      content="Універсальний шаблон для послуг, маленьких бізнесів і особистих проєктів."
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='8' fill='%231F4D45'/%3E%3Ccircle cx='24' cy='32' r='10' fill='%23E46F55'/%3E%3Ccircle cx='40' cy='32' r='10' fill='%23F6C8BA'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header" aria-label="Головна навігація">
+      <a class="brand-mark" href="#top" aria-label="Майже готово">
+        <span class="brand-dot"></span>
+        Майже готово
+      </a>
+      <nav class="nav-links" aria-label="Розділи сторінки">
+        <a href="#uses">Для кого</a>
+        <a href="#packages">Пакети</a>
+        <a href="#contact">Контакти</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero section-grid" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow">Перший сайт без зайвої складності</p>
+          <h1 id="hero-title">Майже готово</h1>
+          <p class="hero-subtitle">
+            Сайт для справи, яку вже час показати людям.
+          </p>
+          <p class="hero-text">
+            Універсальний шаблон для послуг, маленьких бізнесів і особистих
+            проєктів. Зрозуміло пояснює, що ви робите, для кого це корисно і як
+            з вами зв'язатися.
+          </p>
+          <div class="hero-actions" aria-label="Основні дії">
+            <a class="button button-primary" href="#contact">Обговорити ідею</a>
+            <a class="button button-secondary" href="#uses">Подивитися формат</a>
+          </div>
+        </div>
+
+        <div class="hero-visual" aria-label="Абстрактний візуальний приклад сайту">
+          <img
+            src="assets/workshop-texture.svg"
+            alt=""
+            class="texture-image"
+            aria-hidden="true"
+          />
+          <div class="floating-sheet sheet-main">
+            <span class="sheet-label">шаблон</span>
+            <strong>Назва справи</strong>
+            <p>Коротко пояснює, що ви пропонуєте і кому це підходить.</p>
+          </div>
+          <div class="floating-sheet sheet-small">
+            <span>контакт</span>
+            <strong>1 клік</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-grid intro-band" aria-labelledby="uses-title" id="uses">
+        <div>
+          <p class="eyebrow">Для яких справ</p>
+          <h2 id="uses-title">Одна сторінка, яку легко підставити під себе</h2>
+        </div>
+        <div class="use-grid">
+          <article class="use-card">
+            <span class="card-number">01</span>
+            <h3>Послуга</h3>
+            <p>Коли треба просто пояснити, що ви робите, для кого і як почати.</p>
+          </article>
+          <article class="use-card">
+            <span class="card-number">02</span>
+            <h3>Маленький бізнес</h3>
+            <p>Для першої сторінки з описом, цінами, прикладами й контактом.</p>
+          </article>
+          <article class="use-card">
+            <span class="card-number">03</span>
+            <h3>Портфоліо</h3>
+            <p>Щоб показати кілька робіт, напрям роботи або майбутній проєкт.</p>
+          </article>
+          <article class="use-card">
+            <span class="card-number">04</span>
+            <h3>Локальна справа</h3>
+            <p>Для майстерні, занять, консультацій або невеликої ініціативи.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section packages-section" aria-labelledby="packages-title" id="packages">
+        <div class="section-heading">
+          <p class="eyebrow">Пакети або послуги</p>
+          <h2 id="packages-title">Навчальні ціни, які можна замінити або прибрати</h2>
+        </div>
+        <div class="package-grid">
+          <article class="package-card">
+            <p class="package-name">Старт</p>
+            <h3>Перший опис справи</h3>
+            <p>
+              Для простої сторінки з головною обіцянкою, коротким поясненням і
+              контактом.
+            </p>
+            <strong class="price">від 1 500 Kč</strong>
+          </article>
+          <article class="package-card package-featured">
+            <p class="package-name">Повна сторінка</p>
+            <h3>Послуги, приклади й довіра</h3>
+            <p>
+              Для кількох блоків, де можна показати формати роботи, переваги,
+              ціни і наступний крок.
+            </p>
+            <strong class="price">від 3 500 Kč</strong>
+          </article>
+          <article class="package-card">
+            <p class="package-name">Під себе</p>
+            <h3>Адаптація змісту й стилю</h3>
+            <p>
+              Для заміни текстів, кольорів, блоків і посилань під конкретну
+              справу.
+            </p>
+            <strong class="price">від 5 000 Kč</strong>
+          </article>
+        </div>
+      </section>
+
+      <section class="section process-section" aria-labelledby="process-title">
+        <div class="section-heading narrow">
+          <p class="eyebrow">Як це працює</p>
+          <h2 id="process-title">Не ідеальний сайт з першого дня. Достатньо ясний старт.</h2>
+        </div>
+        <div class="process-list">
+          <article>
+            <span>1</span>
+            <h3>Опишіть свою справу</h3>
+            <p>Сформулюйте, що ви робите, кому допомагаєте і яку дію очікуєте.</p>
+          </article>
+          <article>
+            <span>2</span>
+            <h3>Оберіть потрібний формат</h3>
+            <p>Залиште блоки, які потрібні саме для першої публічної версії.</p>
+          </article>
+          <article>
+            <span>3</span>
+            <h3>Покажіть сторінку людям</h3>
+            <p>Опублікуйте посилання, перевірте реакцію і поступово покращуйте.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section proof-section" aria-labelledby="proof-title">
+        <div class="proof-panel">
+          <p class="eyebrow">Довіра або приклад</p>
+          <h2 id="proof-title">
+            Тут може бути відгук, коротка історія або факт, який допомагає
+            відвідувачу довіряти вам.
+          </h2>
+          <p>
+            У демо-версії це безпечна заглушка. Пізніше її можна замінити на
+            реальну цитату, приклад роботи, посилання на портфоліо або кілька
+            чесних речень про досвід.
+          </p>
+        </div>
+        <div class="proof-notes" aria-label="Що можна додати в цей блок">
+          <div>
+            <span></span>
+            Покажіть приклад роботи
+          </div>
+          <div>
+            <span></span>
+            Додайте одну реальну цитату
+          </div>
+          <div>
+            <span></span>
+            Поясніть, чому вам можна довіряти
+          </div>
+        </div>
+      </section>
+
+      <section class="section contact-section" aria-labelledby="contact-title" id="contact">
+        <div>
+          <p class="eyebrow">Контакти</p>
+          <h2 id="contact-title">Маєте справу, яку вже час показати людям?</h2>
+          <p>
+            Залиште тут свій контакт або додайте посилання, за яким з вами
+            зручно зв'язатися.
+          </p>
+        </div>
+        <div class="contact-actions">
+          <a class="social-button" href="#contact" aria-label="Написати на email" title="Email">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4.5 6.75h15v10.5h-15z" />
+              <path d="m5.25 7.5 6.75 5.25 6.75-5.25" />
+            </svg>
+            <span class="sr-only">Email</span>
+          </a>
+          <a class="social-button" href="#contact" aria-label="Написати в Telegram" title="Telegram">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M20.25 4.75 3.75 11.2l5.85 2.05 2.15 6 3.1-4.25 4.85 3.55.55-13.8Z" />
+              <path d="m9.6 13.25 10.05-8.1" />
+            </svg>
+            <span class="sr-only">Telegram</span>
+          </a>
+          <a class="social-button" href="#contact" aria-label="Відкрити Instagram" title="Instagram">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="5" y="5" width="14" height="14" rx="4" />
+              <circle cx="12" cy="12" r="3.25" />
+              <circle cx="16.3" cy="7.8" r=".75" />
+            </svg>
+            <span class="sr-only">Instagram</span>
+          </a>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

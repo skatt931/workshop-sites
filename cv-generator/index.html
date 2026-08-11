@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Безкоштовний генератор резюме українською мовою." />
+    <title>Резюме · генератор</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23101510'/%3E%3Cpath d='M15 42 28 14h8l13 28h-9l-2-6H26l-2 6Zm14-13h7l-3.5-10Z' fill='%23d8ff4f'/%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#top" aria-label="Резюме — на початок"><span>R</span> Резюме</a>
+        <p>Конструктор професійного представлення</p>
+        <div class="status"><i></i> Зберігається локально</div>
+      </header>
+
+      <section class="intro" id="top">
+        <div><p class="kicker">Ваш наступний крок</p><h1>Резюме, яке<br /><em>говорить за вас.</em></h1></div>
+        <p>Заповніть деталі зліва — праворуч одразу побачите готове резюме. Жодних акаунтів, жодних зайвих кроків.</p>
+      </section>
+
+      <div class="workspace">
+        <section class="editor" aria-labelledby="form-title">
+          <div class="panel-heading"><div><p class="kicker">01 · Дані</p><h2 id="form-title">Про вас</h2></div><span class="step-count">7 полів</span></div>
+          <form id="resume-form">
+            <fieldset><legend>Основне</legend>
+              <label>Ім’я та прізвище <input name="name" value="Олена Кравченко" placeholder="Наприклад, Олена Кравченко" /></label>
+              <label>Бажана посада <input name="role" value="Product Designer" placeholder="Наприклад, Product Designer" /></label>
+            </fieldset>
+            <fieldset><legend>Контакти</legend>
+              <label>Телефон, email, місто <input name="contacts" value="+380 67 123 45 67 · olena@email.com · Київ" placeholder="Телефон · email · місто" /></label>
+            </fieldset>
+            <fieldset><legend>Коротко про себе</legend>
+              <label class="sr-only" for="summary">Коротко про себе</label><textarea id="summary" name="summary" rows="4" placeholder="Розкажіть про свій досвід і сильні сторони">Дизайнерка цифрових продуктів із 5 роками досвіду. Перетворюю складні задачі на зрозумілі та корисні інтерфейси.</textarea>
+            </fieldset>
+            <fieldset><legend>Досвід роботи</legend>
+              <label class="sr-only" for="experience">Досвід роботи</label><textarea id="experience" name="experience" rows="5" placeholder="Компанія · посада · роки&#10;Ключове досягнення">Bright Studio · Senior Product Designer · 2022 — зараз
+Створюю дизайн-системи та веду продукт від дослідження до запуску.</textarea><small>Порада: новий рядок починає новий пункт.</small>
+            </fieldset>
+            <fieldset><legend>Освіта</legend>
+              <label class="sr-only" for="education">Освіта</label><textarea id="education" name="education" rows="3" placeholder="Заклад освіти · спеціальність · роки">Київський політехнічний інститут · Дизайн · 2015 — 2019</textarea>
+            </fieldset>
+            <fieldset><legend>Навички</legend>
+              <label class="sr-only" for="skills">Навички</label><input id="skills" name="skills" value="Figma, UX-дослідження, Прототипування, Design systems" placeholder="Розділяйте комами" /><small>Розділяйте навички комами.</small>
+            </fieldset>
+            <div class="actions"><button class="copy" type="button" id="copy-btn">Скопіювати резюме <span aria-hidden="true">↗</span></button><button class="export" type="button" id="export-btn">Експортувати PDF</button><button class="clear" type="button" id="clear-btn">Очистити форму</button></div>
+            <p class="toast" id="toast" role="status" aria-live="polite"></p>
+          </form>
+        </section>
+
+        <section class="preview-wrap" aria-labelledby="preview-title">
+          <div class="preview-top"><div><p class="kicker">02 · Результат</p><h2 id="preview-title">Попередній перегляд</h2></div><span>UA / 01</span></div>
+          <article class="resume" id="resume-preview">
+            <header class="resume-header"><p class="resume-mark">РЕЗЮМЕ <span>2026</span></p><h3 data-output="name">Олена Кравченко</h3><p class="resume-role" data-output="role">Product Designer</p><p class="resume-contacts" data-output="contacts">+380 67 123 45 67 · olena@email.com · Київ</p></header>
+            <section class="resume-section" data-section="summary"><h4>Профіль</h4><p data-output="summary"></p></section>
+            <section class="resume-section" data-section="experience"><h4>Досвід</h4><div data-output="experience" class="line-list"></div></section>
+            <section class="resume-section" data-section="education"><h4>Освіта</h4><div data-output="education" class="line-list"></div></section>
+            <section class="resume-section" data-section="skills"><h4>Навички</h4><div data-output="skills" class="skill-list"></div></section>
+            <footer>Створено у Резюме · <span id="today"></span></footer>
+          </article>
+        </section>
+      </div>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>

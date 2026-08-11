@@ -1,0 +1,37 @@
+:root { --ink:#102727; --paper:#f3f0e8; --lime:#c8ff58; --cyan:#36ddd1; --orange:#ff7045; --muted:#75918e; --line:rgba(16,39,39,.18); }
+* { box-sizing:border-box; }
+body { margin:0; min-width:320px; color:var(--ink); background:var(--paper); font-family:"Avenir Next Condensed","Futura Condensed",Impact,sans-serif; }
+button { font:inherit; cursor:pointer; }
+.app-shell { min-height:100vh; overflow:hidden; position:relative; padding:26px clamp(22px,5vw,82px) 48px; background:radial-gradient(circle at 12% 44%, rgba(54,221,209,.55) 0 8%, transparent 27%), radial-gradient(circle at 90% 78%, rgba(200,255,88,.65) 0 9%, transparent 25%), var(--paper); }
+.app-shell::before { content:""; position:absolute; inset:0; opacity:.13; pointer-events:none; background-image:linear-gradient(90deg,transparent 0 96%,var(--ink) 96%),linear-gradient(transparent 0 96%,var(--ink) 96%); background-size:56px 56px; mask-image:linear-gradient(to bottom,black,transparent 74%); }
+.topbar,.timer-stage,.mode-section { position:relative; max-width:1320px; margin-inline:auto; }
+.topbar { display:flex; justify-content:space-between; align-items:flex-start; }
+.brand { display:flex; align-items:center; gap:11px; color:var(--ink); text-decoration:none; font-size:13px; line-height:.89; letter-spacing:.05em; }
+.brand-mark { display:grid; place-items:center; width:42px; height:42px; border-radius:50%; color:var(--paper); background:var(--ink); font-size:16px; font-family:Georgia,serif; font-weight:bold; }
+.session-counter { display:flex; gap:13px; align-items:end; padding:7px 0 6px; border-bottom:2px solid var(--ink); }
+.counter-label { font-size:12px; letter-spacing:.08em; color:#45605d; text-transform:uppercase; }
+.session-counter strong { font-family:Georgia,serif; font-size:28px; line-height:.75; }
+.timer-stage { display:grid; justify-items:center; padding:clamp(32px,6vh,76px) 0 46px; text-align:center; }
+.eyebrow { margin:0; font-size:13px; letter-spacing:.15em; font-weight:800; color:#315552; }
+.status-dot { display:inline-block; width:9px; height:9px; margin-right:8px; border-radius:50%; background:var(--orange); box-shadow:0 0 0 4px rgba(255,112,69,.16); }
+.timer-stage h1 { margin:11px 0 0; font-size:clamp(34px,5vw,68px); line-height:.9; letter-spacing:-.04em; text-transform:uppercase; }
+.block-description { margin:12px 0 10px; color:#52706d; font-family:Georgia,serif; font-size:clamp(15px,1.8vw,20px); font-style:italic; }
+.clock-wrap { width:min(54vw,390px); min-width:285px; aspect-ratio:1; position:relative; display:grid; place-items:center; margin-top:2px; }
+.clock { width:100%; height:100%; transform:rotate(-90deg); }
+.clock-track,.clock-progress { fill:none; stroke-width:13; }
+.clock-track { stroke:rgba(16,39,39,.11); }
+.clock-progress { stroke:var(--ink); stroke-linecap:round; stroke-dasharray:873.36; stroke-dashoffset:0; transition:stroke-dashoffset .45s linear,stroke .25s; }
+.clock-content { position:absolute; display:grid; gap:6px; place-items:center; }
+time { font-family:Georgia,serif; font-size:clamp(70px,11vw,112px); font-variant-numeric:tabular-nums; letter-spacing:-.08em; line-height:.8; }
+.clock-caption { font-size:14px; letter-spacing:.1em; color:#597572; text-transform:uppercase; }
+.controls { display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-top:17px; }
+.button { min-width:119px; min-height:52px; border:2px solid var(--ink); border-radius:0; padding:11px 19px; font-weight:800; font-size:16px; text-transform:uppercase; letter-spacing:.04em; transition:transform .16s ease,background .16s ease; }
+.button:hover:not(:disabled) { transform:translate(-3px,-3px); box-shadow:4px 4px 0 var(--ink); }
+.button:focus-visible,.mode-card:focus-visible { outline:4px solid var(--orange); outline-offset:3px; }
+.button-primary { background:var(--ink); color:var(--lime); }.button-primary span{font-size:23px;vertical-align:-1px;margin-left:8px}.button-secondary{background:var(--cyan)}.button-quiet{background:transparent;border-color:transparent;color:#466460}.button:disabled{opacity:.4;cursor:not-allowed}
+.mode-section { border-top:2px solid var(--ink); padding-top:20px; }.section-heading { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:14px; }.section-heading h2 { margin:0; font-family:Georgia,serif; font-size:25px; font-weight:normal; font-style:italic; }
+.modes { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }.mode-card { display:grid; grid-template-columns:auto 1fr auto auto; align-items:center; gap:12px; min-height:76px; padding:13px 16px; border:2px solid var(--ink); text-align:left; color:var(--ink); background:rgba(243,240,232,.73); transition:transform .17s ease,box-shadow .17s ease,background .17s ease; }.mode-card:hover,.mode-card.is-active { background:var(--lime); transform:translateY(-4px); box-shadow:5px 5px 0 var(--ink); }.mode-number { align-self:start; font-family:Georgia,serif; font-size:13px; }.mode-name { font-size:clamp(15px,1.65vw,22px); line-height:.93; text-transform:uppercase; }.mode-card strong { font-family:Georgia,serif; font-size:27px; line-height:.8; white-space:nowrap; }.mode-card small { font-family:"Avenir Next Condensed",sans-serif; font-size:12px; letter-spacing:.06em; text-transform:uppercase; }.mode-arrow { font-size:23px; }
+.completion-message { position:fixed; z-index:3; left:50%; top:50%; width:min(480px,calc(100vw - 34px)); padding:27px 45px 30px 27px; transform:translate(-50%,-50%) rotate(-2deg); background:var(--orange); color:#fffaf0; box-shadow:11px 11px 0 var(--ink); text-align:left; }.completion-message span{font-size:13px;font-weight:800;letter-spacing:.13em}.completion-message strong{display:block;margin-top:7px;font-family:Georgia,serif;font-size:37px;line-height:1}.completion-message button{position:absolute;top:8px;right:13px;border:0;background:none;color:inherit;font-family:Georgia,serif;font-size:30px}
+body.is-finished .clock-progress { stroke:var(--orange); animation:finishPulse .7s ease-in-out infinite alternate; } body.is-running .status-dot { background:var(--lime); box-shadow:0 0 0 4px rgba(200,255,88,.38); } @keyframes finishPulse { to { stroke-width:21; } }
+@media (max-width:700px){.app-shell{padding:20px 18px 32px}.counter-label{max-width:106px;text-align:right;font-size:10px}.timer-stage{padding-top:50px}.modes{grid-template-columns:1fr}.mode-card{min-height:68px}.clock-wrap{width:82vw}.section-heading{display:block}.section-heading h2{margin-top:7px}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}

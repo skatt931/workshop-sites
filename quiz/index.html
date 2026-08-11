@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101516">
+  <title>AI: поруч щодня — квіз</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23101510'/%3E%3Cpath d='M15 42 28 14h8l13 28h-9l-2-6H26l-2 6Zm14-13h7l-3.5-10Z' fill='%23d8ff4f'/%3E%3C/svg%3E">
+  <style>
+    :root { --ink:#101516; --paper:#f3f1e8; --lime:#d9ff45; --coral:#ff6b4a; --cyan:#54e8ff; --muted:#a9afa8; --line:rgba(243,241,232,.17); }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; overflow-x:hidden; color:var(--paper); background:var(--ink); font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace; }
+    body::before { content:""; position:fixed; inset:0; pointer-events:none; opacity:.24; background-image:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px); background-size:48px 48px; mask-image:linear-gradient(to bottom,black,transparent 88%); }
+    .orb { position:fixed; width:42vw; aspect-ratio:1; border-radius:50%; filter:blur(3px); opacity:.15; pointer-events:none; }
+    .orb.one { background:var(--lime); top:-26vw; right:-12vw; } .orb.two { background:var(--cyan); bottom:-28vw; left:-13vw; }
+    main { width:min(1280px,calc(100% - 64px)); min-height:100vh; margin:auto; padding:30px 0 36px; position:relative; display:flex; flex-direction:column; }
+    header { display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--line); padding-bottom:22px; }
+    .brand { font:700 clamp(1rem,1.8vw,1.35rem)/1 Georgia,serif; letter-spacing:-.05em; } .brand span { color:var(--lime); }
+    .live { display:flex; gap:9px; align-items:center; font-size:.72rem; text-transform:uppercase; letter-spacing:.12em; } .live i { width:9px; height:9px; border-radius:50%; background:var(--coral); box-shadow:0 0 0 5px rgba(255,107,74,.15); animation:pulse 1.6s infinite; }
+    .quiz { flex:1; display:flex; flex-direction:column; justify-content:center; padding:32px 0 18px; }
+    .meta { display:flex; justify-content:space-between; align-items:flex-end; gap:20px; margin-bottom:18px; } .counter { color:var(--lime); font-size:.78rem; letter-spacing:.12em; text-transform:uppercase; } .progress-text { color:var(--muted); font-size:.78rem; }
+    .progress { height:8px; background:#29302d; overflow:hidden; margin-bottom:clamp(32px,5vh,56px); } .progress div { height:100%; width:20%; background:var(--lime); transition:width .45s cubic-bezier(.2,.8,.2,1); }
+    .question { max-width:1040px; margin-bottom:clamp(26px,4vh,46px); animation:rise .38s ease both; }
+    .eyebrow { display:flex; align-items:center; gap:12px; color:var(--cyan); font-size:.76rem; text-transform:uppercase; letter-spacing:.12em; } .eyebrow::before { content:""; height:1px; width:36px; background:currentColor; }
+    h1 { font:600 clamp(1.7rem,4.3vw,4.4rem)/1.04 Georgia,serif; letter-spacing:-.06em; margin:14px 0 0; }
+    .answers { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+    .answer { appearance:none; position:relative; min-height:92px; padding:18px 20px 18px 70px; border:1px solid var(--line); border-radius:2px; background:rgba(19,27,27,.74); color:var(--paper); cursor:pointer; text-align:left; font:500 clamp(.88rem,1.5vw,1.06rem)/1.35 "SFMono-Regular",Consolas,monospace; transition:transform .18s, border-color .18s, background .18s; }
+    .answer:hover:not(:disabled), .answer:focus-visible { transform:translate(-3px,-3px); border-color:var(--lime); outline:none; box-shadow:5px 5px 0 var(--lime); }
+    .letter { position:absolute; top:50%; left:20px; transform:translateY(-50%); display:grid; place-items:center; width:32px; height:32px; border:1px solid #62706a; color:var(--muted); font-size:.76rem; }
+    .answer.correct { color:#162000; background:var(--lime); border-color:var(--lime); } .answer.correct .letter { border-color:#162000; color:#162000; }
+    .answer.wrong { color:#fff4ee; background:#9f3827; border-color:var(--coral); } .answer.wrong .letter { border-color:#fff4ee; color:#fff4ee; }
+    .answer:disabled { cursor:default; } .answer.fade { opacity:.38; }
+    .feedback { min-height:28px; margin:20px 0 0; color:var(--muted); font-size:.88rem; } .feedback strong { color:var(--lime); } .feedback.nope strong { color:var(--coral); }
+    .actions { display:flex; justify-content:flex-end; min-height:58px; margin-top:24px; } .next { border:0; border-radius:0; padding:0 26px; color:var(--ink); background:var(--lime); cursor:pointer; font:700 .82rem Georgia,serif; letter-spacing:-.03em; opacity:.35; pointer-events:none; transition:opacity .2s,transform .2s; } .next.ready { opacity:1; pointer-events:auto; } .next.ready:hover { transform:translate(3px,-3px); box-shadow:-4px 4px 0 var(--coral); }
+    .result { text-align:center; max-width:850px; margin:auto; animation:rise .5s ease both; } .result .stamp { display:inline-block; color:var(--ink); background:var(--coral); padding:9px 12px; transform:rotate(-3deg); font-size:.77rem; font-weight:700; text-transform:uppercase; } .score { color:var(--lime); font:800 clamp(5rem,14vw,10rem)/.9 Georgia,serif; letter-spacing:-.12em; margin:25px 0 18px; } .result h1 { font-size:clamp(1.6rem,3vw,3rem); } .result p { max-width:620px; margin:24px auto 36px; color:#c5cbc4; line-height:1.7; font-size:clamp(.92rem,1.4vw,1.05rem); } .restart { border:1px solid var(--lime); padding:17px 24px; color:var(--lime); background:transparent; cursor:pointer; font:600 .84rem Georgia,serif; } .restart:hover { background:var(--lime); color:var(--ink); }
+    footer { display:flex; justify-content:space-between; color:var(--muted); border-top:1px solid var(--line); padding-top:18px; font-size:.7rem; text-transform:uppercase; letter-spacing:.08em; }
+    @keyframes rise { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:none; } } @keyframes pulse { 50% { transform:scale(.65); opacity:.5; } }
+    @media (max-width:700px) { main { width:min(100% - 32px,1280px); padding-top:20px; } .live { font-size:.6rem; } .answers { grid-template-columns:1fr; } .answer { min-height:72px; } footer { font-size:.58rem; } }
+  </style>
+</head>
+<body>
+  <div class="orb one"></div><div class="orb two"></div>
+  <main>
+    <header><div class="brand">AI <span>/</span> ЩОДНЯ</div><div class="live"><i></i> живий квіз</div></header>
+    <section class="quiz" id="app" aria-live="polite"></section>
+    <footer><span>Воркшоп · штучний інтелект</span><span>Думай критично. Пробуй сміливо.</span></footer>
+  </main>
+  <script>
+    const questions = [
+      { q:'Який із цих прикладів уже може використовувати ШІ у вашому телефоні?', a:['Будильник, що сам вимикається','Автоматичне покращення фото','Заряджання батареї від Wi‑Fi','Зміна кольору корпусу'], correct:1, note:'ШІ розпізнає сцени, обличчя та освітлення, щоб покращити кадр.' },
+      { q:'Що варто зробити перед тим, як надіслати ШІ важливий робочий текст?', a:['Одразу переслати всім','Перевірити факти, тон і конфіденційні дані','Додати якомога більше емодзі','Нічого — ШІ не помиляється'], correct:1, note:'ШІ — сильний помічник, але відповідальність за результат залишається за людиною.' },
+      { q:'Як навігатор може застосовувати ШІ у звичайній поїздці?', a:['Вгадувати ваш настрій','Будувати маршрут з урахуванням заторів','Замінювати водійське посвідчення','Створювати нові дороги'], correct:1, note:'Моделі аналізують багато сигналів руху та прогнозують час у дорозі.' },
+      { q:'Який запит до чат-асистента найкраще допоможе отримати корисну відповідь?', a:['«Напиши щось»','«Допоможи»','«Склади ввічливий лист клієнту про перенесення зустрічі на завтра»','«Будь розумним»'], correct:2, note:'Чим зрозуміліші мета, контекст і формат — тим точніший результат.' },
+      { q:'Що є здоровим правилом користування рекомендаціями ШІ?', a:['Сприймати їх як остаточну істину','Порівнювати з надійними джерелами і власним судженням','Завжди робити навпаки','Використовувати лише вночі'], correct:1, note:'Критичне мислення — найкращий «апгрейд» до будь-якого інструмента ШІ.' }
+    ];
+    const app = document.querySelector('#app'); let current = 0, score = 0, answered = false;
+    function renderQuestion() {
+      const item = questions[current]; answered = false;
+      app.innerHTML = `<div class="meta"><span class="counter">Питання ${current + 1} / ${questions.length}</span><span class="progress-text">${Math.round((current + 1) / questions.length * 100)}% шляху</span></div><div class="progress"><div style="width:${(current + 1) / questions.length * 100}%"></div></div><div class="question"><div class="eyebrow">ШІ у повсякденні</div><h1>${item.q}</h1></div><div class="answers">${item.a.map((answer,index) => `<button class="answer" data-index="${index}"><span class="letter">${'АБВГ'[index]}</span>${answer}</button>`).join('')}</div><p class="feedback" id="feedback">Оберіть варіант — і одразу побачите відповідь.</p><div class="actions"><button class="next" id="next">${current === questions.length - 1 ? 'Показати результат →' : 'Далі →'}</button></div>`;
+      app.querySelectorAll('.answer').forEach(btn => btn.addEventListener('click', choose)); app.querySelector('#next').addEventListener('click', next);
+    }
+    function choose(e) { if (answered) return; answered = true; const picked = +e.currentTarget.dataset.index, item = questions[current], buttons = app.querySelectorAll('.answer'), feedback = app.querySelector('#feedback'); buttons.forEach((btn,i) => { btn.disabled = true; if (i === item.correct) btn.classList.add('correct'); else if (i === picked) btn.classList.add('wrong'); else btn.classList.add('fade'); }); const ok = picked === item.correct; if (ok) score++; feedback.className = `feedback ${ok ? '' : 'nope'}`; feedback.innerHTML = ok ? `<strong>Так!</strong> ${item.note}` : `<strong>Майже.</strong> ${item.note}`; app.querySelector('#next').classList.add('ready'); }
+    function next() { if (!answered) return; current++; current < questions.length ? renderQuestion() : renderResult(); }
+    function renderResult() { const comments = ['ШІ ще не встиг вас здивувати — але тепер саме час спробувати кілька інструментів.', 'Хороший старт! Ви вже помічаєте ШІ навколо себе.', 'Чудово! Ви впевнено орієнтуєтесь у повсякденному ШІ.', 'Блискуче! Ви готові бути провідником ШІ для своєї команди.']; const comment = comments[score === 5 ? 3 : score >= 3 ? 2 : score >= 1 ? 1 : 0]; app.innerHTML = `<div class="result"><span class="stamp">фінішна пряма</span><div class="score">${score}/5</div><h1>${score === 5 ? 'Абсолютний AI-радар!' : score >= 3 ? 'Ви на хвилі ШІ' : 'Цікавість увімкнено'}</h1><p>${comment}</p><button class="restart" id="restart">↻ Пройти ще раз</button></div>`; app.querySelector('#restart').addEventListener('click', () => { current=0; score=0; renderQuestion(); }); }
+    renderQuestion();
+  </script>
+</body>
+</html>
